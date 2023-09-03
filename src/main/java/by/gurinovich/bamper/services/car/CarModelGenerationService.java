@@ -4,6 +4,7 @@ import by.gurinovich.bamper.DTO.car.CarModelGenerationDTO;
 import by.gurinovich.bamper.models.carsEntities.CarModel;
 import by.gurinovich.bamper.models.carsEntities.CarModelGeneration;
 import by.gurinovich.bamper.repositories.car.CarModelGenerationRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,13 +15,10 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class CarModelGenerationService {
     private final CarModelGenerationRepo carModelGenerationRepo;
 
-    @Autowired
-    public CarModelGenerationService(CarModelGenerationRepo carModelGenerationRepo) {
-        this.carModelGenerationRepo = carModelGenerationRepo;
-    }
 
     @Transactional
     public CarModelGeneration save(CarModel carModel, CarModelGenerationDTO carModelGenerationDTO) throws ParseException {
@@ -42,6 +40,10 @@ public class CarModelGenerationService {
             return true;
         }
         return false;
+    }
+
+    public CarModelGeneration findById(Integer id){
+        return carModelGenerationRepo.findById(id).orElse(null);
     }
 
 

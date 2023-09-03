@@ -34,4 +34,8 @@ public class SparePart {
     @OneToMany(mappedBy = "sparePart")
     private List<Post> posts;
 
+    public SparePart(SparePartName name, String number) {
+        this.name = name;
+        this.number = number;
+    }
 }

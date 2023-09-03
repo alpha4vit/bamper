@@ -1,11 +1,6 @@
 package by.gurinovich.bamper.DTO.car;
 
-import by.gurinovich.bamper.models.carsEntities.CarBrand;
-import by.gurinovich.bamper.models.carsEntities.CarModelGeneration;
-import by.gurinovich.bamper.models.sparePartsEntities.SparePart;
-import by.gurinovich.bamper.utils.Views;
-import com.fasterxml.jackson.annotation.JsonView;
-import lombok.AllArgsConstructor;
+import by.gurinovich.bamper.DTO.spareParts.SparePartDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -31,4 +26,5 @@ public class CarModelDTO {
         this.carModelGenerationDTOs = carModelGenerationDTOs;
         this.sparePartDTOs = sparePartDTOs;
     }
+
 }

@@ -6,23 +6,18 @@ import by.gurinovich.bamper.models.carsEntities.CarModel;
 import by.gurinovich.bamper.repositories.car.CarBrandRepo;
 import by.gurinovich.bamper.repositories.car.CarModelRepo;
 import by.gurinovich.bamper.services.sparePart.SparePartService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CarModelService {
     private final CarModelRepo carModelRepo;
-    private final CarBrandRepo carBrandRepo;
 
-    @Autowired
-    public CarModelService(CarModelRepo carModelRepo, CarBrandRepo carBrandRepo) {
-        this.carModelRepo = carModelRepo;
-        this.carBrandRepo = carBrandRepo;
-    }
 
     public static CarModelDTO convertToDTO(CarModel carModel){
         return new CarModelDTO(carModel.getId(),
@@ -48,12 +43,8 @@ public class CarModelService {
     }
 
     @Transactional
-    public void addModelForBrand(CarBrand carBrand, CarModelDTO carModelDTO){
+    public void save(CarBrand carBrand, CarModelDTO carModelDTO){
         carModelRepo.save(new CarModel(carModelDTO.getName(), carBrand));
     }
 
-//    @Transactional
-//    public boolean deleteModelForBrand(CRUDModelRequest crudModelRequest){
-//
-//    }
 }

@@ -4,6 +4,7 @@ import by.gurinovich.bamper.DTO.car.CarBrandDTO;
 import by.gurinovich.bamper.models.carsEntities.CarBrand;
 import by.gurinovich.bamper.models.carsEntities.CarModel;
 import by.gurinovich.bamper.repositories.car.CarBrandRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,13 +14,10 @@ import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class CarBrandService {
     private final CarBrandRepo carBrandRepo;
 
-    @Autowired
-    public CarBrandService(CarBrandRepo carBrandRepo) {
-        this.carBrandRepo = carBrandRepo;
-    }
 
     public static CarBrandDTO convertToDTO(CarBrand carBrand){
         return new CarBrandDTO(carBrand.getId(), carBrand.getName(), carBrand.getModels().stream().map(CarModel::convertToDTO).toList());
