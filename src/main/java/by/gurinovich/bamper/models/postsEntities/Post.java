@@ -1,6 +1,6 @@
 package by.gurinovich.bamper.models.postsEntities;
 
-import by.gurinovich.bamper.security.User;
+import by.gurinovich.bamper.models.User;
 import by.gurinovich.bamper.models.sparePartsEntities.SparePart;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
