@@ -1,32 +1,44 @@
 package by.gurinovich.bamper.APIcontrollers;
 
-
-import by.gurinovich.bamper.requests.auth.AuthRequest;
-import by.gurinovich.bamper.requests.auth.RegisterRequest;
-import by.gurinovich.bamper.responses.auth.AuthResponse;
-import by.gurinovich.bamper.security.services.AuthService;
+import by.gurinovich.bamper.DTO.user.UserDTO;
+import by.gurinovich.bamper.models.user.User;
+import by.gurinovich.bamper.requests.auth.JWTRequest;
+import by.gurinovich.bamper.responses.auth.JWTResponse;
+import by.gurinovich.bamper.services.user.AuthService;
+import by.gurinovich.bamper.services.user.UserService;
+import by.gurinovich.bamper.utils.validation.OnCreate;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
+
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@Validated
 public class AuthController {
+
     private final AuthService authService;
-
-    @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request){
-
-        return ResponseEntity.ok(authService.register(request));
-    }
+    private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request){
-        return ResponseEntity.ok(authService.login(request));
+    public JWTResponse login(@Validated @RequestBody JWTRequest loginRequest){
+        return authService.login(loginRequest);
+    }
+
+    @PostMapping("/register")
+    public UserDTO register(@Validated(OnCreate.class) @RequestBody UserDTO userDTO) throws ParseException {
+        User user = UserService.convertFromDTO(userDTO);
+        User createdUser = userService.save(user);
+        return UserService.convertToDTO(createdUser);
+    }
+
+    @PostMapping("/refresh")
+    public JWTResponse refresh(@RequestBody String refreshToken){
+        return authService.refresh(refreshToken);
     }
 }

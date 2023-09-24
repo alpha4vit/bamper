@@ -5,7 +5,8 @@ import by.gurinovich.bamper.models.carsEntities.CarModel;
 import by.gurinovich.bamper.models.carsEntities.CarModelGeneration;
 import by.gurinovich.bamper.repositories.car.CarModelGenerationRepo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,18 @@ import java.util.List;
 public class CarModelGenerationService {
     private final CarModelGenerationRepo carModelGenerationRepo;
 
+    public CarModelGeneration getById(Integer id){
+        return carModelGenerationRepo.findById(id).orElse(null);
+    }
+
+    @Transactional
+    public boolean deleteById(Integer id){
+        if(carModelGenerationRepo.findById(id).isPresent()){
+            carModelGenerationRepo.deleteById(id);
+            return true;
+        }
+        return false;
+    }
 
     @Transactional
     public CarModelGeneration save(CarModel carModel, CarModelGenerationDTO carModelGenerationDTO) throws ParseException {
@@ -32,20 +45,6 @@ public class CarModelGenerationService {
     public List<CarModelGeneration> getAllGenerationsForModel(CarModel carModel){
         return carModelGenerationRepo.findAllByCarModel(carModel);
     }
-
-    @Transactional
-    public boolean deleteById(Integer id){
-        if(carModelGenerationRepo.findById(id).isPresent()){
-            carModelGenerationRepo.deleteById(id);
-            return true;
-        }
-        return false;
-    }
-
-    public CarModelGeneration findById(Integer id){
-        return carModelGenerationRepo.findById(id).orElse(null);
-    }
-
 
     public static CarModelGenerationDTO convertToDTO(CarModelGeneration carModelGeneration){
         return new CarModelGenerationDTO(carModelGeneration.getId(),

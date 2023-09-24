@@ -6,12 +6,13 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
 @Entity
 @Table(name = "car_brands")
-public class CarBrand {
+public class CarBrand{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonView(Views.Internal.class)
@@ -22,7 +23,7 @@ public class CarBrand {
     @JsonView(Views.Internal.class)
     private String name;
 
-    @OneToMany(mappedBy = "carBrand")
+    @OneToMany(mappedBy = "carBrand", fetch = FetchType.EAGER)
     @JsonView(Views.Internal.class)
     private List<CarModel> models;
 

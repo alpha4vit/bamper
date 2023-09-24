@@ -7,7 +7,8 @@ import by.gurinovich.bamper.repositories.sparePart.SparePartNameRepo;
 import by.gurinovich.bamper.repositories.sparePart.SparePartRepo;
 import by.gurinovich.bamper.requests.SparePartCreatingRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,16 +25,7 @@ public class SparePartService {
         return sparePartRepo.findAll();
     }
 
-    @Transactional
-    public SparePart save(SparePartCreatingRequest sparePartCreatingRequest){
-        SparePartName sparePartName = sparePartCreatingRequest.getName_id() != null ?
-                sparePartNameRepo.findById(sparePartCreatingRequest.getName_id()).get() : sparePartNameRepo.findByName(sparePartCreatingRequest.getName()).get();
-        if (sparePartName == null)
-            return null;
-        return sparePartRepo.save(new SparePart(sparePartName, sparePartCreatingRequest.getNumber()));
-    }
-
-    public SparePart findById(Integer id){
+    public SparePart getById(Integer id){
         return sparePartRepo.findById(id).orElse(null);
     }
 
@@ -44,6 +36,14 @@ public class SparePartService {
             return true;
         }
         return false;
+    }
+
+    @Transactional
+    public SparePart save(SparePartCreatingRequest sparePartCreatingRequest){
+        SparePartName sparePartName = sparePartCreatingRequest.getName_id() != null ?
+                sparePartNameRepo.findById(sparePartCreatingRequest.getName_id()).get() : sparePartNameRepo.findByName(sparePartCreatingRequest.getName()).get();
+
+        return sparePartName != null ? sparePartRepo.save(new SparePart(sparePartName, sparePartCreatingRequest.getNumber())) : null;
     }
 
 

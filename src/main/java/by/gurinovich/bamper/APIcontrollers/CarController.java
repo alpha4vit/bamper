@@ -12,7 +12,8 @@ import by.gurinovich.bamper.services.car.CarModelService;
 import by.gurinovich.bamper.utils.Views;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,7 @@ public class CarController {
     private final CarModelGenerationService carModelGenetionService;
 
 
+
     @GetMapping("/brands/all")
     public ResponseEntity<List<CarBrandDTO>> getCarBrands(){
         List<CarBrandDTO> brandDTOs = carBrandService.getAll().stream().map(CarBrandService::convertToDTO).toList();
@@ -39,11 +41,12 @@ public class CarController {
 
     @GetMapping("/brands/{brand_id}")
     public ResponseEntity<Object> getCarBrand(@PathVariable("brand_id") Integer brand_id){
-        CarBrand carBrand = carBrandService.findById(brand_id);
+        CarBrand carBrand = carBrandService.getById(brand_id);
         if (carBrand == null)
             return new ResponseEntity<>("CarBrand with this id not found", HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(CarBrandService.convertToDTO(carBrand), HttpStatus.OK);
     }
+
 
     @PostMapping("/brands/add")
     public ResponseEntity<Object> addCarBrand(@RequestBody @JsonView(Views.Internal.class) CarBrand carBrand){
@@ -59,9 +62,10 @@ public class CarController {
         return new ResponseEntity<>("CarBrand with this id not found", HttpStatus.NOT_FOUND);
     }
 
+
     @GetMapping("/models/getModels/{brand_id}")
     public ResponseEntity<Object> getModelForCarBrand(@PathVariable("brand_id") Integer brand_id){
-        CarBrand carBrand = carBrandService.findById(brand_id);
+        CarBrand carBrand = carBrandService.getById(brand_id);
         if (carBrand == null)
             return new ResponseEntity<>("CarBrand with this name or id not found", HttpStatusCode.valueOf(404));
         return  new ResponseEntity<>(carModelService.getAllModelForBrand(carBrand).stream().map(CarModelService::convertToDTO).toList(), HttpStatusCode.valueOf(200));
@@ -69,7 +73,7 @@ public class CarController {
 
     @GetMapping("/models/getModel/{model_id}")
     public ResponseEntity<Object> getModel(@PathVariable("model_id") Integer model_id){
-        CarModel carModel = carModelService.findById(model_id);
+        CarModel carModel = carModelService.getById(model_id);
         if (carModel == null)
             return new ResponseEntity<>("CarModel with this name or id not found", HttpStatusCode.valueOf(404));
         return new ResponseEntity<>(CarModelService.convertToDTO(carModel), HttpStatus.OK);
@@ -77,7 +81,7 @@ public class CarController {
 
     @PostMapping("/models/addModel/{brand_id}")
     public ResponseEntity<Object> addModelForCarBrand(@PathVariable("brand_id") Integer brand_id, @RequestBody CarModelDTO carModelDTO){
-        CarBrand carBrand = carBrandService.findById(brand_id);
+        CarBrand carBrand = carBrandService.getById(brand_id);
         if (carBrand == null)
             return new ResponseEntity<>("CarBrand with this id not found", HttpStatus.NOT_FOUND);
         carModelService.save(carBrand, carModelDTO);
@@ -93,7 +97,7 @@ public class CarController {
 
     @GetMapping("/models/getGenerations/{model_id}")
     public ResponseEntity<Object> getModelGenerations(@PathVariable("model_id") Integer model_id){
-        CarModel carModel = carModelService.findById(model_id);
+        CarModel carModel = carModelService.getById(model_id);
         if (carModel == null)
             return new ResponseEntity<>("CarModel with this id not found", HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(carModelGenetionService.getAllGenerationsForModel(carModel).stream().map(CarModelGenerationService::convertToDTO).toList(), HttpStatus.OK);
@@ -101,7 +105,7 @@ public class CarController {
 
     @GetMapping("/models/getGeneration/{generation_id}")
     public ResponseEntity<Object> getModelGeneration(@PathVariable("generation_id") Integer generation_id){
-        CarModelGeneration carModelGeneration = carModelGenetionService.findById(generation_id);
+        CarModelGeneration carModelGeneration = carModelGenetionService.getById(generation_id);
         if (carModelGeneration == null)
             return new ResponseEntity<>("CarModelGeneration with this id not found", HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(CarModelGenerationService.convertToDTO(carModelGeneration), HttpStatus.NOT_FOUND);
@@ -109,7 +113,7 @@ public class CarController {
 
     @PostMapping("/models/addGeneration/{model_id}")
     public ResponseEntity<Object> addGenerationForCarModel(@PathVariable("model_id") Integer model_id, @RequestBody CarModelGenerationDTO carModelGenerationDTO) throws ParseException {
-        CarModel carModel = carModelService.findById(model_id);
+        CarModel carModel = carModelService.getById(model_id);
         if (carModel == null)
             return new ResponseEntity<>("CarModel with this id not found", HttpStatus.NOT_FOUND);
         CarModelGeneration carModelGeneration = carModelGenetionService.save(carModel, carModelGenerationDTO);

@@ -1,6 +1,6 @@
 package by.gurinovich.bamper.DTO.post;
 
-import by.gurinovich.bamper.DTO.UserDTO;
+import by.gurinovich.bamper.DTO.user.UserDTO;
 import by.gurinovich.bamper.DTO.spareParts.SparePartDTO;
 import lombok.Data;
 

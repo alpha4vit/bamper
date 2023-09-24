@@ -5,12 +5,12 @@ import by.gurinovich.bamper.models.carsEntities.CarBrand;
 import by.gurinovich.bamper.models.carsEntities.CarModel;
 import by.gurinovich.bamper.repositories.car.CarBrandRepo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -19,9 +19,10 @@ public class CarBrandService {
     private final CarBrandRepo carBrandRepo;
 
 
-    public static CarBrandDTO convertToDTO(CarBrand carBrand){
-        return new CarBrandDTO(carBrand.getId(), carBrand.getName(), carBrand.getModels().stream().map(CarModel::convertToDTO).toList());
+    public CarBrand getById(Integer id){
+        return carBrandRepo.findById(id).orElse(null);
     }
+
 
     public List<CarBrand> getAll(){
         return carBrandRepo.findAll();
@@ -41,11 +42,7 @@ public class CarBrandService {
         return false;
     }
 
-    public CarBrand findById(Integer id){
-        return carBrandRepo.findById(id).orElse(null);
-    }
-
-    public CarBrand findByName(String name){
-        return carBrandRepo.findByName(name).orElse(null);
+    public static CarBrandDTO convertToDTO(CarBrand carBrand){
+        return new CarBrandDTO(carBrand.getId(), carBrand.getName(), carBrand.getModels().stream().map(CarModel::convertToDTO).toList());
     }
 }

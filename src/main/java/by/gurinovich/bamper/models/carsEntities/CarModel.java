@@ -12,13 +12,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
 @Entity
 @Table(name = "car_models")
 @NoArgsConstructor
-public class CarModel {
+public class CarModel  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -27,11 +28,11 @@ public class CarModel {
     @Column(name = "model_name")
     private String name;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "car_brand_id", referencedColumnName = "id")
     private CarBrand carBrand;
 
-    @OneToMany(mappedBy = "carModel")
+    @OneToMany(mappedBy = "carModel", fetch = FetchType.EAGER)
     private List<CarModelGeneration> carModelGenerations;
 
     @ManyToMany(mappedBy = "carModels")
