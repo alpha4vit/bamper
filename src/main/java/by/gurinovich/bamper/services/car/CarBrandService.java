@@ -1,6 +1,7 @@
 package by.gurinovich.bamper.services.car;
 
 import by.gurinovich.bamper.DTO.car.CarBrandDTO;
+import by.gurinovich.bamper.exceptions.ResourceNotFoundException;
 import by.gurinovich.bamper.models.carsEntities.CarBrand;
 import by.gurinovich.bamper.models.carsEntities.CarModel;
 import by.gurinovich.bamper.repositories.car.CarBrandRepo;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -20,7 +22,10 @@ public class CarBrandService {
 
 
     public CarBrand getById(Integer id){
-        return carBrandRepo.findById(id).orElse(null);
+        Optional<CarBrand> carBrand = carBrandRepo.findById(id);
+        if (carBrand.isEmpty())
+            throw new ResourceNotFoundException("CarBrand with this id not found");
+        return carBrand.get();
     }
 
 
@@ -34,12 +39,11 @@ public class CarBrandService {
     }
 
     @Transactional
-    public boolean deleteById(Integer id){
+    public void deleteById(Integer id){
         if (carBrandRepo.findById(id).isPresent()){
             carBrandRepo.deleteById(id);
-            return true;
         }
-        return false;
+        throw new ResourceNotFoundException("CarBrand with this id not found");
     }
 
     public static CarBrandDTO convertToDTO(CarBrand carBrand){

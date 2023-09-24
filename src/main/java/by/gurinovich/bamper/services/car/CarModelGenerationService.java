@@ -1,6 +1,7 @@
 package by.gurinovich.bamper.services.car;
 
 import by.gurinovich.bamper.DTO.car.CarModelGenerationDTO;
+import by.gurinovich.bamper.exceptions.ResourceNotFoundException;
 import by.gurinovich.bamper.models.carsEntities.CarModel;
 import by.gurinovich.bamper.models.carsEntities.CarModelGeneration;
 import by.gurinovich.bamper.repositories.car.CarModelGenerationRepo;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -21,16 +23,18 @@ public class CarModelGenerationService {
     private final CarModelGenerationRepo carModelGenerationRepo;
 
     public CarModelGeneration getById(Integer id){
-        return carModelGenerationRepo.findById(id).orElse(null);
+        Optional<CarModelGeneration> carModelGeneration = carModelGenerationRepo.findById(id);
+        if (carModelGeneration.isEmpty())
+            throw new ResourceNotFoundException("CarModelGeneration with this id not found");
+        return carModelGeneration.get();
     }
 
     @Transactional
-    public boolean deleteById(Integer id){
+    public void deleteById(Integer id){
         if(carModelGenerationRepo.findById(id).isPresent()){
             carModelGenerationRepo.deleteById(id);
-            return true;
         }
-        return false;
+        throw new ResourceNotFoundException("CarModelGeneration with this id not found");
     }
 
     @Transactional

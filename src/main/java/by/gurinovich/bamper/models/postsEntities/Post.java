@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "posts")
@@ -26,5 +28,9 @@ public class Post {
     @JoinColumn(name = "spare_part_id", referencedColumnName = "id")
     private SparePart sparePart;
 
+    @Column(name = "image")
+    @CollectionTable(name = "posts_images")
+    @ElementCollection
+    private List<String> images;
 
 }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/spareParts")
 @RequiredArgsConstructor
-public class SparePartController {
+public class SparePartsController {
 
     private final SparePartNameService sparePartNameService;
     private final SparePartService sparePartService;

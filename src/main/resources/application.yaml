@@ -1,17 +1,19 @@
 spring:
+  config:
+    import: optional:file:.env[.properties]
   cache:
     type: redis
     cache-names: redis-cache
   data:
     redis:
-      host: localhost
+      host: ${REDIS_HOST}
       port: 6379
-      password: Z2ZqbmdpbWttNHI0MzFkcwo=
+      password: ${REDIS_PASSWORD}
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/bamper?currentSchema=bamper
-    username: postgres
-    password: root
+    url: jdbc:postgresql://${HOST}:5432/${POSTGRES_DATABASE}?currentSchema=${POSTGRES_SCHEMA}
+    username: ${POSTGRES_USERNAME}
+    password: ${POSTGRES_PASSWORD}
   jpa:
     showSql: true
   sql:
@@ -24,6 +26,11 @@ spring:
     enabled: true
 security:
   jwt:
-    secret: ZHNhZHNhZGthc2RrbWFza2RtYXNrZG1hc2ttZGthc2RrYXNtZG1hc2tkcw==
+    secret: ${JWT_SECRET}
     access: 3600000
     refresh: 2592000000
+minio:
+  bucket: ${MINIO_BUCKET}
+  url: ${MINIO_URL}
+  accessKey: ${MINIO_ACCESS_KEY}
+  secretKey: ${MINIO_SECRET_KEY}
