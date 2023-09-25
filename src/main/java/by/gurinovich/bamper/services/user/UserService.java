@@ -33,6 +33,10 @@ public class UserService {
         return user.orElseThrow(() -> new ResourceNotFoundException("User with this id not found"));
     }
 
+    public boolean isPostOwner(Integer id, Integer post_id){
+        return userRepo.isPostOwner(post_id, id);
+    }
+
     @Transactional(readOnly = true)
     public User getByEmail(String email){
         Optional<User> user = userRepo.findByEmail(email);

@@ -9,8 +9,9 @@ import by.gurinovich.bamper.models.carsEntities.CarModelGeneration;
 import by.gurinovich.bamper.services.car.CarBrandService;
 import by.gurinovich.bamper.services.car.CarModelGenerationService;
 import by.gurinovich.bamper.services.car.CarModelService;
-import by.gurinovich.bamper.utils.Views;
-import com.fasterxml.jackson.annotation.JsonView;
+import by.gurinovich.bamper.utils.mappers.impl.car.CarBrandMapper;
+import by.gurinovich.bamper.utils.mappers.impl.car.CarModelGenerationMapper;
+import by.gurinovich.bamper.utils.mappers.impl.car.CarModelMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -28,26 +29,26 @@ public class CarsController {
     private final CarBrandService carBrandService;
     private final CarModelService carModelService;
     private final CarModelGenerationService carModelGenetionService;
-
+    private final CarBrandMapper carBrandMapper;
+    private final CarModelMapper carModelMapper;
+    private final CarModelGenerationMapper carModelGenerationMapper;
 
 
     @GetMapping("/brands/all")
     public ResponseEntity<List<CarBrandDTO>> getCarBrands(){
-        List<CarBrandDTO> brandDTOs = carBrandService.getAll().stream().map(CarBrandService::convertToDTO).toList();
-        return new ResponseEntity<>(brandDTOs, HttpStatusCode.valueOf(200));
+        return new ResponseEntity<>(carBrandMapper.toDTOs(carBrandService.getAll()), HttpStatusCode.valueOf(200));
     }
 
     @GetMapping("/brands/{brand_id}")
     public ResponseEntity<Object> getCarBrand(@PathVariable("brand_id") Integer brand_id){
-        return new ResponseEntity<>(CarBrandService.convertToDTO(carBrandService.getById(brand_id)), HttpStatus.OK);
+        return new ResponseEntity<>(carBrandMapper.toDTO(carBrandService.getById(brand_id)), HttpStatus.OK);
     }
 
 
     @PostMapping("/brands/add")
-    public ResponseEntity<Object> addCarBrand(@RequestBody @JsonView(Views.Internal.class) CarBrand carBrand){
-        carBrandService.save(carBrand);
+    public ResponseEntity<Object> addCarBrand(@RequestBody CarBrandDTO carBrandDTO){
+        carBrandService.save(carBrandMapper.fromDTO(carBrandDTO));
         return new ResponseEntity<>(HttpStatusCode.valueOf(201));
-        //TODO create validation for adding carBrand with the existed name
     }
 
     @DeleteMapping("/brands/delete/{brand_id}")
@@ -57,54 +58,52 @@ public class CarsController {
     }
 
 
-    @GetMapping("/models/getModels/{brand_id}")
+    @GetMapping("/brands/models/{brand_id}")
     public ResponseEntity<Object> getModelForCarBrand(@PathVariable("brand_id") Integer brand_id){
         CarBrand carBrand = carBrandService.getById(brand_id);
-        return  new ResponseEntity<>(carModelService.getAllModelForBrand(carBrand).stream().map(CarModelService::convertToDTO).toList(), HttpStatusCode.valueOf(200));
+        return  new ResponseEntity<>(carModelMapper.toDTOs(carModelService.getAllModelForBrand(carBrand)), HttpStatusCode.valueOf(200));
     }
 
-    @GetMapping("/models/getModel/{model_id}")
+    @GetMapping("/models/{model_id}")
     public ResponseEntity<Object> getModel(@PathVariable("model_id") Integer model_id){
         CarModel carModel = carModelService.getById(model_id);
-        return new ResponseEntity<>(CarModelService.convertToDTO(carModel), HttpStatus.OK);
+        return new ResponseEntity<>(carModelMapper.toDTO(carModel), HttpStatus.OK);
     }
 
-    @PostMapping("/models/addModel/{brand_id}")
-    public ResponseEntity<Object> addModelForCarBrand(@PathVariable("brand_id") Integer brand_id, @RequestBody CarModelDTO carModelDTO){
-        CarBrand carBrand = carBrandService.getById(brand_id);
-        if (carBrand == null)
-            return new ResponseEntity<>("CarBrand with this id not found", HttpStatus.NOT_FOUND);
-        carModelService.save(carBrand, carModelDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    @PostMapping("/models/add/{brand_id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addModelForCarBrand(@PathVariable("brand_id") Integer brand_id, @RequestBody CarModelDTO carModelDTO){
+        carModelService.save(carBrandService.getById(brand_id), carModelDTO);
     }
 
-    @DeleteMapping("/models/deleteModel/{model_id}")
+    @DeleteMapping("/models/delete/{model_id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteModelForBrand(@PathVariable("model_id") Integer model_id){
         carModelService.deleteById(model_id);
     }
 
-    @GetMapping("/models/getGenerations/{model_id}")
+    @GetMapping("/models/{model_id}/generations")
     public ResponseEntity<Object> getModelGenerations(@PathVariable("model_id") Integer model_id){
         CarModel carModel = carModelService.getById(model_id);
-        return new ResponseEntity<>(carModelGenetionService.getAllGenerationsForModel(carModel).stream().map(CarModelGenerationService::convertToDTO).toList(), HttpStatus.OK);
+        return new ResponseEntity<>(
+                carModelGenerationMapper.toDTOs(carModelGenetionService.getAllGenerationsForModel(carModel)),
+                HttpStatus.OK);
     }
 
-    @GetMapping("/models/getGeneration/{generation_id}")
+    @GetMapping("/models/generations/{generation_id}")
     public ResponseEntity<Object> getModelGeneration(@PathVariable("generation_id") Integer generation_id){
         CarModelGeneration carModelGeneration = carModelGenetionService.getById(generation_id);
-        return new ResponseEntity<>(CarModelGenerationService.convertToDTO(carModelGeneration), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(carModelGenerationMapper.toDTO(carModelGeneration), HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/models/addGeneration/{model_id}")
+    @PostMapping("/models/{model_id}/generations/add")
     public ResponseEntity<Object> addGenerationForCarModel(@PathVariable("model_id") Integer model_id, @RequestBody CarModelGenerationDTO carModelGenerationDTO) throws ParseException {
         CarModel carModel = carModelService.getById(model_id);
         CarModelGeneration carModelGeneration = carModelGenetionService.save(carModel, carModelGenerationDTO);
-        return new ResponseEntity<>(CarModelGenerationService.convertToDTO(carModelGeneration), HttpStatus.CREATED);
-
+        return new ResponseEntity<>(carModelGenerationMapper.toDTO(carModelGeneration), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/models/deleteGeneration/{generation_id}")
+    @DeleteMapping("/models/generations/delete/{generation_id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteGeneration(@PathVariable("generation_id") Integer generation_id){
         carModelGenetionService.deleteById(generation_id);

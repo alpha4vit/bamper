@@ -22,6 +22,7 @@
         <liquibase.version>4.23.2</liquibase.version>
         <minio.version>8.5.5</minio.version>
         <jjwt.version>0.11.5</jjwt.version>
+        <modelmapper.version>3.1.1</modelmapper.version>
     </properties>
     <dependencies>
         <dependency>
@@ -98,6 +99,11 @@
             <groupId>io.minio</groupId>
             <artifactId>minio</artifactId>
             <version>${minio.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>${modelmapper.version}</version>
         </dependency>
 
     </dependencies>

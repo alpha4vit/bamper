@@ -32,10 +32,11 @@ public class CarModelService {
     }
 
     public void deleteById(Integer id){
-        if (carModelRepo.findById(id).isPresent()) {
+        if (carModelRepo.findById(id).isPresent())
             carModelRepo.deleteById(id);
-        }
-        throw new ResourceNotFoundException("CarModel with this id not found");
+
+        else
+            throw new ResourceNotFoundException("CarModel with this id not found");
     }
 
     @Transactional
@@ -43,12 +44,6 @@ public class CarModelService {
         carModelRepo.save(new CarModel(carModelDTO.getName(), carBrand));
     }
 
-    public static CarModelDTO convertToDTO(CarModel carModel){
-        return new CarModelDTO(carModel.getId(),
-                carModel.getName(),
-                carModel.getCarModelGenerations().stream().map(CarModelGenerationService::convertToDTO).toList(),
-                carModel.getSpareParts().stream().map(SparePartService::converToDTO).toList());
-    }
 
 
 }

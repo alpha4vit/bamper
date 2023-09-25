@@ -36,5 +36,12 @@ public class CarModelGeneration {
         this.startYearOfProduction = startYearOfProduction;
         this.endYearOfProduction = endYearOfProduction;
     }
+
+    public CarModelGeneration(Integer id, String name, Date startYearOfProduction, Date endYearOfProduction) {
+        this.id = id;
+        this.name = name;
+        this.startYearOfProduction = startYearOfProduction;
+        this.endYearOfProduction = endYearOfProduction;
+    }
 }
 
