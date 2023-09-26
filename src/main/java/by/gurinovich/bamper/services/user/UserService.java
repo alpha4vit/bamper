@@ -34,7 +34,7 @@ public class UserService {
     }
 
     public boolean isPostOwner(Integer id, Integer post_id){
-        return userRepo.isPostOwner(post_id, id);
+        return true; //userRepo.isPostOwner(post_id, id); TODO
     }
 
     @Transactional(readOnly = true)

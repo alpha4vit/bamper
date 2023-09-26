@@ -14,9 +14,9 @@ public interface UserRepo extends JpaRepository<User, Integer> {
     Optional<User> findByUsername(String username);
     Optional<User> findByEmail(String email);
 
-
-    @Query(value = """
-    select 1 from posts where user_id = :user_id and id = :post_id
-    """)
-    boolean isPostOwner(@Param("post_id") Integer post_id,@Param("user_id") Integer user_id);
+//
+//    @Query(value = """
+//    select 1 from posts where user_id = :user_id and id = :post_id
+//    """)
+//    boolean isPostOwner(@Param("post_id") Integer post_id,@Param("user_id") Integer user_id);
 }

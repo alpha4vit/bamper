@@ -16,11 +16,6 @@ spring:
     password: ${POSTGRES_PASSWORD}
   jpa:
     showSql: true
-  sql:
-    init:
-      mode: never
-      continue-on-error: false
-      #      data-locations: classpath:demo_data.sql
   liquibase:
     change-log: classpath:liquibase/db.changelog.yaml
     enabled: true

@@ -2,7 +2,11 @@ package by.gurinovich.bamper.services.post;
 
 import by.gurinovich.bamper.exceptions.ImageUploadException;
 import by.gurinovich.bamper.models.postsEntities.Image;
-import io.minio.*;
+import by.gurinovich.bamper.props.MinioProperties;
+import io.minio.BucketExistsArgs;
+import io.minio.MakeBucketArgs;
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
 import io.minio.errors.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -44,11 +48,11 @@ public class ImageService {
 
     private void createBucket() throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
         boolean found = minioClient.bucketExists(BucketExistsArgs.builder()
-                        .bucket(minioProperties.name())
+                        .bucket(minioProperties.getBucket())
                 .build());
         if (!found){
             minioClient.makeBucket(MakeBucketArgs.builder()
-                            .bucket(minioProperties.name())
+                            .bucket(minioProperties.getBucket())
                     .build());
         }
     }
@@ -65,7 +69,7 @@ public class ImageService {
     private void saveImage(InputStream inputStream, String filename) throws IOException, ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
         minioClient.putObject(PutObjectArgs.builder()
                         .stream(inputStream, inputStream.available(), -1)
-                        .bucket(minioProperties.name())
+                        .bucket(minioProperties.getBucket())
                         .object(filename)
                 .build());
     }
