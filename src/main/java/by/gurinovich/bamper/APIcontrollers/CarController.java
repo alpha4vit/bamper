@@ -24,7 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/api/car", produces = "application/json")
 @RequiredArgsConstructor
-public class CarsController {
+public class CarController {
 
     private final CarBrandService carBrandService;
     private final CarModelService carModelService;

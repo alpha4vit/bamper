@@ -2,6 +2,7 @@ package by.gurinovich.bamper.services.user;
 
 import by.gurinovich.bamper.DTO.user.UserDTO;
 import by.gurinovich.bamper.exceptions.ResourceNotFoundException;
+import by.gurinovich.bamper.models.postsEntities.Post;
 import by.gurinovich.bamper.models.user.Role;
 import by.gurinovich.bamper.models.user.User;
 import by.gurinovich.bamper.repositories.user.UserRepo;
@@ -34,7 +35,7 @@ public class UserService {
     }
 
     public boolean isPostOwner(Integer id, Integer post_id){
-        return true; //userRepo.isPostOwner(post_id, id); TODO
+        return getById(id).getPosts().stream().anyMatch(el -> el.getId() == post_id);
     }
 
     @Transactional(readOnly = true)

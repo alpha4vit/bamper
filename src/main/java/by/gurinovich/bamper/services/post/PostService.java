@@ -60,14 +60,19 @@ public class PostService {
 
     @Transactional
     public void deleteImage(Integer post_id, String imageName){
-        System.out.println(imageName);
         Post post = getById(post_id);
         List<String> images = post.getImages();
-        images.forEach(System.out::println);
-        imageService.removeImage(imageName);
         if (!images.remove(imageName))
             throw new ResourceNotFoundException("Image with this name not found for this post");
+        imageService.removeImage(imageName);
         postRepo.save(post);
+    }
+
+    @Transactional
+    public void deleteById(Integer id){
+        if (postRepo.findById(id).isEmpty())
+            throw new ResourceNotFoundException("Post with this id not found");
+        postRepo.deleteById(id);
     }
 
 }

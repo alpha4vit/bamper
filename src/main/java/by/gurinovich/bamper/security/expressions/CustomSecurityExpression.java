@@ -16,7 +16,7 @@ public class CustomSecurityExpression {
     public boolean isPostOwner(final Integer post_id){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         JWTEntity jwtEntity = (JWTEntity) authentication.getPrincipal();
-
+        System.out.println(jwtEntity.getUsername());
         return userService.isPostOwner(jwtEntity.getId(), post_id);
     }
 }

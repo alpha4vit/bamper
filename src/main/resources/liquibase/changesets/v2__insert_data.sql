@@ -4,7 +4,7 @@ VALUES ('roma3',
         'roma3@gmail.com',
         date(now()),
         '+375447517324'),
-       ('roma4', '$2a$12$4LtpASJPk0yXfmt35URB1uqMnmxjhzDW7dUP6de2mC.QKl3H5pc82',
+       ('roma4', '$2a$12$WI517GLLWbav.zFkrpgGheYbSfctLph8TLZAINfScsxRhoi5B5tg.',
         'roma4@gmail.com', date(now()), '+375291234567');
 
 
