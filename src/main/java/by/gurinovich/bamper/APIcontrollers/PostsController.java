@@ -5,11 +5,16 @@ import by.gurinovich.bamper.DTO.post.PostDTO;
 import by.gurinovich.bamper.models.postsEntities.Image;
 import by.gurinovich.bamper.models.postsEntities.Post;
 import by.gurinovich.bamper.models.user.User;
+import by.gurinovich.bamper.requests.PostCreation;
 import by.gurinovich.bamper.services.post.PostService;
 import by.gurinovich.bamper.services.user.UserService;
 import by.gurinovich.bamper.utils.mappers.post.ImageMapper;
 import by.gurinovich.bamper.utils.mappers.post.PostMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import io.swagger.v3.core.util.Json;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONObject;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,15 +45,26 @@ public class PostsController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Object> addNewPostForUser(@RequestBody PostDTO postDTO){
-        Post post = postService.save(postMapper.fromDTO(postDTO));
+    public ResponseEntity<Object> addNewPostForUser(@RequestBody PostCreation postCreation){
+        Post post = postService.save(postCreation);
         return new ResponseEntity<>(postMapper.toDTO(post), HttpStatus.CREATED);
     }
 
-    @PostMapping("/{post_id}/image")
-    public ResponseEntity<Object> uploadImageForPost(@PathVariable("post_id") Integer post_id, @RequestBody ImageDTO imageDTO){
+    @PostMapping( "/{post_id}/images")
+    public ResponseEntity<Object> uploadImageForPost(@PathVariable("post_id") Integer post_id, @ModelAttribute ImageDTO imageDTO){
         Image image = imageMapper.fromDTO(imageDTO);
         postService.uploadImage(post_id, image);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @DeleteMapping("/{post_id}/deleteImage")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteImage(@PathVariable("post_id") Integer post_id,
+                            @RequestBody String jsonRequest){
+        JSONObject jsonObject = new JSONObject(jsonRequest);
+        String name = jsonObject.getString("name");
+        postService.deleteImage(post_id, name);
+    }
+
+
 }

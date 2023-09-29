@@ -5,12 +5,14 @@ import by.gurinovich.bamper.models.sparePartsEntities.SparePart;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
 @Entity
 @Table(name = "posts")
+@NoArgsConstructor
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,4 +35,10 @@ public class Post {
     @ElementCollection
     private List<String> images;
 
+
+    public Post(String title, User user, SparePart sparePart) {
+        this.title = title;
+        this.user = user;
+        this.sparePart = sparePart;
+    }
 }

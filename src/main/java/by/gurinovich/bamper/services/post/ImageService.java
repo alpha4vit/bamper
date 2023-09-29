@@ -3,12 +3,10 @@ package by.gurinovich.bamper.services.post;
 import by.gurinovich.bamper.exceptions.ImageUploadException;
 import by.gurinovich.bamper.models.postsEntities.Image;
 import by.gurinovich.bamper.props.MinioProperties;
-import io.minio.BucketExistsArgs;
-import io.minio.MakeBucketArgs;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
+import io.minio.*;
 import io.minio.errors.*;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,8 +29,8 @@ public class ImageService {
         catch (Exception ex){
             throw new ImageUploadException("Error bucket creating: "+ex.getMessage());
         }
-        MultipartFile file = image.getMultipartFile();
-        if (file.isEmpty() || file.getOriginalFilename() == null)
+        MultipartFile file = image.getFile();
+        if (file.getOriginalFilename() == null || file.isEmpty() )
             throw new ImageUploadException("Image must not be null!!!");
         String filename = generateFileName(file);
         InputStream inputStream;
@@ -46,7 +44,8 @@ public class ImageService {
         return filename;
     }
 
-    private void createBucket() throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+    @SneakyThrows
+    private void createBucket() {
         boolean found = minioClient.bucketExists(BucketExistsArgs.builder()
                         .bucket(minioProperties.getBucket())
                 .build());
@@ -58,19 +57,28 @@ public class ImageService {
     }
 
     private String generateFileName(MultipartFile multipartFile){
-        String extension = getExtenstion(multipartFile);
+        String extension = getExtension(multipartFile);
         return UUID.randomUUID()+"."+extension;
     }
 
-    private String getExtenstion(MultipartFile multipartFile) {
+    private String getExtension(MultipartFile multipartFile) {
         return multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().lastIndexOf(".")+1);
     }
 
-    private void saveImage(InputStream inputStream, String filename) throws IOException, ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+    @SneakyThrows
+    private void saveImage(InputStream inputStream, String fileName) {
         minioClient.putObject(PutObjectArgs.builder()
                         .stream(inputStream, inputStream.available(), -1)
                         .bucket(minioProperties.getBucket())
-                        .object(filename)
+                        .object(fileName)
+                .build());
+    }
+
+    @SneakyThrows
+    public void removeImage(String fileName){
+        minioClient.removeObject(RemoveObjectArgs.builder()
+                        .bucket(minioProperties.getBucket())
+                        .object(fileName)
                 .build());
     }
 }

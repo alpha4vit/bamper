@@ -66,4 +66,10 @@ create table if not exists users_roles(
     role varchar(255) not null,
     primary key (user_id, role),
     constraint fk_users_roles_users foreign key (user_id) references users(id) on delete cascade on update no action
-)
+);
+
+
+create table if not exists posts_images(
+    post_id int not null references posts(id) on delete cascade,
+    image varchar(255) not null
+);

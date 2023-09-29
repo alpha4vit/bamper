@@ -3,9 +3,12 @@ package by.gurinovich.bamper.services.post;
 import by.gurinovich.bamper.exceptions.ResourceNotFoundException;
 import by.gurinovich.bamper.models.postsEntities.Image;
 import by.gurinovich.bamper.models.postsEntities.Post;
+import by.gurinovich.bamper.models.sparePartsEntities.SparePart;
 import by.gurinovich.bamper.models.user.User;
 import by.gurinovich.bamper.repositories.posts.PostRepo;
+import by.gurinovich.bamper.requests.PostCreation;
 import by.gurinovich.bamper.security.JWTEntity;
+import by.gurinovich.bamper.services.sparePart.SparePartService;
 import by.gurinovich.bamper.services.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -22,6 +25,7 @@ public class PostService {
     private final PostRepo postRepo;
     private final UserService userService;
     private final ImageService imageService;
+    private final SparePartService sparePartService;
 
     public List<Post> getAll(){
         return postRepo.findAll();
@@ -30,7 +34,7 @@ public class PostService {
     public Post getById(Integer id){
         Optional<Post> post = postRepo.findById(id);
         if (post.isEmpty())
-            throw new ResourceNotFoundException("Post with this id already exists");
+            throw new ResourceNotFoundException("Post with this id doesnt exist");
         return post.get();
     }
 
@@ -38,12 +42,11 @@ public class PostService {
         return postRepo.findByUser(user);
     }
 
-    public Post save(Post post) {
+    public Post save(PostCreation postCreation) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         JWTEntity jwtEntity = (JWTEntity) authentication.getPrincipal();
-
-        post.setUser(userService.getById(jwtEntity.getId()));
-
+        SparePart sparePart = sparePartService.getById(postCreation.getSparePartId());
+        Post post = new Post(postCreation.getTitle(), userService.getById(jwtEntity.getId()), sparePart);
         return postRepo.save(post);
     }
 
@@ -51,5 +54,20 @@ public class PostService {
     public void uploadImage(Integer id, Image image) {
         Post post = getById(id);
         String imageName = imageService.upload(image);
+        List<String> images = post.getImages();
+        images.add(imageName);
     }
+
+    @Transactional
+    public void deleteImage(Integer post_id, String imageName){
+        System.out.println(imageName);
+        Post post = getById(post_id);
+        List<String> images = post.getImages();
+        images.forEach(System.out::println);
+        imageService.removeImage(imageName);
+        if (!images.remove(imageName))
+            throw new ResourceNotFoundException("Image with this name not found for this post");
+        postRepo.save(post);
+    }
+
 }

@@ -18,9 +18,9 @@ public class PostDTO {
 
     private String title;
 
-    private UserDTO userDTO;
+    private UserDTO user;
 
-    private SparePartDTO sparePartDTO;
+    private SparePartDTO sparePart;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<String> images;
