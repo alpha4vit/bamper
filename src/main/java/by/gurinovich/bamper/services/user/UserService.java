@@ -62,16 +62,6 @@ public class UserService {
         userRepo.deleteById(id);
     }
 
-    public static UserDTO convertToDTO(User user){
-        return new UserDTO(
-                user.getId(),
-                user.getUsername(),
-                user.getPassword(),
-                user.getEmail(),
-                user.getPhoneNumber(),
-                user.getDateOfRegistration().getTime().toString()
-        );
-    }
 
     public static User convertFromDTO(UserDTO userDTO) throws ParseException {
         GregorianCalendar date = new GregorianCalendar();

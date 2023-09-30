@@ -1,12 +1,18 @@
 package by.gurinovich.bamper.responses.auth;
 
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
+@Schema(description = "Response for authentication")
 public final class JWTResponse {
+    @Schema(name = "User id", example = "1")
     private Integer id;
+    @Schema(name = "Username", example = "roma3")
     private String username;
+    @Schema(name = "Access token", example = "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJyb21hMyIsImlkIjoxLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iXSwiaWF0IjoxNjk2MTA4ODUxLCJleHAiOjE2OTg3MDA4NTF9.PM8hcus9h8rEhRvx30y8UxDMcYzR9tQG6xc_7rbiGt3EMjnJfo9rucDjYYxKCroc")
     private String accessToken;
+    @Schema(name = "Refresh token", example = "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJyb21hMyIsImlkIjoxLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iXSwiaWF0IjoxNjk2MTA4ODUxLCJleHAiOjE2OTg3MDA4NTF9.PM8hcus9h8rEhRvx30y8UxDMcYzR9tQG6xc_7rbiGt3EMjnJfo9rucDjYYxKCroc")
     private String refreshToken;
 }

@@ -1,6 +1,7 @@
 package by.gurinovich.bamper.models.user;
 
 import by.gurinovich.bamper.models.postsEntities.Post;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -43,6 +44,7 @@ public class User{
     private String phoneNumber;
 
     @Column(name = "date_of_registration")
+    @JsonFormat(pattern = "yyyy-MM")
     private Calendar dateOfRegistration;
 
     public User(Integer id, String username, String password, String email, Set<Role> roles, String phoneNumber, Calendar dateOfRegistration) {

@@ -1,8 +1,9 @@
-package by.gurinovich.bamper.utils.mappers.post;
+package by.gurinovich.bamper.utils.mappers.impl.post;
 
 import by.gurinovich.bamper.DTO.post.PostDTO;
 import by.gurinovich.bamper.models.postsEntities.Post;
 import by.gurinovich.bamper.utils.mappers.Mappable;
+import by.gurinovich.bamper.utils.mappers.impl.user.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import java.util.List;
 public class PostMapper implements Mappable<Post, PostDTO> {
 
     private final ModelMapper modelMapper;
+    private final UserMapper userMapper;
 
 
     @Override
@@ -24,7 +26,9 @@ public class PostMapper implements Mappable<Post, PostDTO> {
 
     @Override
     public PostDTO toDTO(Post entity) {
-        return modelMapper.map(entity, PostDTO.class);
+        PostDTO post = modelMapper.map(entity, PostDTO.class);
+        post.setUser(userMapper.toDTO(entity.getUser()));
+        return post;
     }
 
     @Override

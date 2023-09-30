@@ -1,4 +1,4 @@
-package by.gurinovich.bamper.utils.mappers.post;
+package by.gurinovich.bamper.utils.mappers.impl.post;
 
 import by.gurinovich.bamper.DTO.post.ImageDTO;
 import by.gurinovich.bamper.models.postsEntities.Image;
