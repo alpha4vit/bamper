@@ -45,6 +45,7 @@ create table if not exists car_models
     model_name varchar(25)
 );
 
+
 create table if not exists car_model_spare_part
 (
     spare_part_id integer references spare_parts(id),

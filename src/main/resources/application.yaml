@@ -19,7 +19,7 @@ spring:
   liquibase:
     change-log: classpath:liquibase/db.changelog.yaml
     enabled: true
-    default_schema: bamper
+    default_schema: ${POSTGRES_SCHEMA}
 security:
   jwt:
     secret: ${JWT_SECRET}
@@ -30,3 +30,5 @@ minio:
   url: ${MINIO_URL}
   accessKey: ${MINIO_ACCESS_KEY}
   secretKey: ${MINIO_SECRET_KEY}
+springdoc:
+  override-with-generic-response: false

@@ -6,7 +6,9 @@ import by.gurinovich.bamper.requests.auth.JWTRequest;
 import by.gurinovich.bamper.responses.auth.JWTResponse;
 import by.gurinovich.bamper.services.user.AuthService;
 import by.gurinovich.bamper.services.user.UserService;
+import by.gurinovich.bamper.utils.mappers.impl.user.UserMapper;
 import by.gurinovich.bamper.utils.validation.OnCreate;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
+import java.util.Arrays;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -24,6 +27,7 @@ public class AuthController {
 
     private final AuthService authService;
     private final UserService userService;
+    private final UserMapper userMapper;
 
     @PostMapping("/login")
     public JWTResponse login(@Validated @RequestBody JWTRequest loginRequest){
@@ -34,9 +38,10 @@ public class AuthController {
     public UserDTO register(@Validated(OnCreate.class) @RequestBody UserDTO userDTO) throws ParseException {
         User user = UserService.convertFromDTO(userDTO);
         User createdUser = userService.save(user);
-        return UserService.convertToDTO(createdUser);
+        return userMapper.toDTO(createdUser);
     }
 
+    @Schema(name = "Refresh token", example = "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJyb21hMyIsImlkIjoxLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iXSwiaWF0IjoxNjk2MTA4ODUxLCJleHAiOjE2OTg3MDA4NTF9.PM8hcus9h8rEhRvx30y8UxDMcYzR9tQG6xc_7rbiGt3EMjnJfo9rucDjYYxKCroceyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJyb21hMyIsImlkIjoxLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iXSwiaWF0IjoxNjk2MTA4ODUxLCJleHAiOjE2OTg3MDA4NTF9.PM8hcus9h8rEhRvx30y8UxDMcYzR9tQG6xc_7rbiGt3EMjnJfo9rucDjYYxKCroc")
     @PostMapping("/refresh")
     public JWTResponse refresh(@RequestBody String refreshToken){
         return authService.refresh(refreshToken);
