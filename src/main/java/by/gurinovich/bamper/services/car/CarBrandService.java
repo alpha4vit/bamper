@@ -35,11 +35,12 @@ public class CarBrandService {
     }
 
     @Transactional
-    public void save(CarBrand carBrand){
+    public boolean save(CarBrand carBrand){
         Optional<CarBrand> check = carBrandRepo.findByName(carBrand.getName());
         if (check.isPresent())
             throw new InvalidOperationException("CarBrand with this id already exists");
         carBrandRepo.save(carBrand);
+        return true;
     }
 
     @Transactional

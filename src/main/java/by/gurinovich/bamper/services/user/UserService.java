@@ -21,6 +21,7 @@ import java.util.*;
 public class UserService {
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
 
 
@@ -54,6 +55,7 @@ public class UserService {
         user.setDateOfRegistration(new GregorianCalendar());
         user.setRoles(new HashSet<>(List.of(Role.USER)));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        emailService.sendEmailMessage(user, EmailType.REGISTRATION, new Properties());
         return userRepo.save(user);
     }
 
