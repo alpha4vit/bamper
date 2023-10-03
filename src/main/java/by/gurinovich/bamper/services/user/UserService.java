@@ -55,8 +55,9 @@ public class UserService {
         user.setDateOfRegistration(new GregorianCalendar());
         user.setRoles(new HashSet<>(List.of(Role.USER)));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        emailService.sendEmailMessage(user, EmailType.REGISTRATION, new Properties());
-        return userRepo.save(user);
+        User created = userRepo.save(user);
+        emailService.sendEmailMessage(created, EmailType.REGISTRATION, new Properties());
+        return created;
     }
 
     @Transactional
@@ -64,23 +65,13 @@ public class UserService {
         userRepo.deleteById(id);
     }
 
-
-    public static User convertFromDTO(UserDTO userDTO) throws ParseException {
-        GregorianCalendar date = new GregorianCalendar();
-        if (userDTO.getDateOfRegistration()!=null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            date.setTime(sdf.parse(userDTO.getDateOfRegistration()));
-        }
-        return new User(
-                userDTO.getId(),
-                userDTO.getUsername(),
-                userDTO.getPassword(),
-                userDTO.getEmail(),
-                new HashSet<>(List.of(Role.USER)),
-                userDTO.getPhoneNumber(),
-                date
-        );
+    @Transactional
+    public void enableUser(Integer id){
+        Optional<User> userOptional = userRepo.findById(id);
+        if (userOptional.isEmpty())
+            throw new ResourceNotFoundException("User with this id not found");
+        User user = userOptional.get();
+        userRepo.save(user);
     }
-
 
 }

@@ -4,6 +4,7 @@ import by.gurinovich.bamper.models.postsEntities.Post;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -47,7 +48,10 @@ public class User{
     @JsonFormat(pattern = "yyyy-MM")
     private Calendar dateOfRegistration;
 
-    public User(Integer id, String username, String password, String email, Set<Role> roles, String phoneNumber, Calendar dateOfRegistration) {
+    @NotNull
+    private boolean enabled;
+
+    public User(Integer id, String username, String password, String email, Set<Role> roles, String phoneNumber, Calendar dateOfRegistration, boolean enabled) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -55,6 +59,7 @@ public class User{
         this.roles = roles;
         this.phoneNumber = phoneNumber;
         this.dateOfRegistration = dateOfRegistration;
+        this.enabled = enabled;
     }
 
     @OneToMany(mappedBy = "user")

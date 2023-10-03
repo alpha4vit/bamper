@@ -19,6 +19,7 @@ public class JWTEntityFactory {
                 user.getUsername(),
                 user.getEmail(),
                 user.getPassword(),
+                user.isEnabled(),
                 mapToGrantedAuthorities(user.getRoles())
         );
     }

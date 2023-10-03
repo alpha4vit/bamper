@@ -16,6 +16,7 @@ public class JWTEntity implements UserDetails {
     private final String username;
     private final String email;
     private final String password;
+    private final Boolean enabled;
     private final Collection<? extends GrantedAuthority> authorities;
 
 
@@ -36,6 +37,6 @@ public class JWTEntity implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 }

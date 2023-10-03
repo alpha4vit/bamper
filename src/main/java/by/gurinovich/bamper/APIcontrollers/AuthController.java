@@ -11,10 +11,7 @@ import by.gurinovich.bamper.utils.validation.OnCreate;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.util.Arrays;
@@ -36,7 +33,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public UserDTO register(@Validated(OnCreate.class) @RequestBody UserDTO userDTO) throws ParseException {
-        User user = UserService.convertFromDTO(userDTO);
+        User user = userMapper.fromDTO(userDTO);
         User createdUser = userService.save(user);
         return userMapper.toDTO(createdUser);
     }
@@ -45,5 +42,10 @@ public class AuthController {
     @PostMapping("/refresh")
     public JWTResponse refresh(@RequestBody String refreshToken){
         return authService.refresh(refreshToken);
+    }
+
+    @GetMapping("/confirm/{user_id}")
+    public void confirm(@PathVariable("user_id") Integer userId){
+        userService.enableUser(userId);
     }
 }
