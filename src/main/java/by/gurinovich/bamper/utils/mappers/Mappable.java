@@ -11,6 +11,6 @@ public interface Mappable<E, D> {
 
     public List<D> toDTOs(List<E> entities);
 
-    public List<E> toEntities(List<D> dtos);
+    public List<E> toEntities(List<D> dtos) throws Exception;
 
 }

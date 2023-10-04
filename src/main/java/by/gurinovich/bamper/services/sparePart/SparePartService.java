@@ -47,9 +47,4 @@ public class SparePartService {
     }
 
 
-    public static SparePartDTO converToDTO(SparePart sparePart){
-        return new SparePartDTO(sparePart.getId(),
-                SparePartNameService.convertToDTO(sparePart.getName()), sparePart.getNumber());
-    }
-
 }

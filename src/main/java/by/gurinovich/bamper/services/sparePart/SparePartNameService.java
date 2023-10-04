@@ -35,7 +35,4 @@ public class SparePartNameService {
         return sparePartNameRepo.findAll();
     }
 
-    public static SparePartNameDTO convertToDTO(SparePartName sparePartName){
-        return new SparePartNameDTO(sparePartName.getId(), sparePartName.getName());
-    }
 }

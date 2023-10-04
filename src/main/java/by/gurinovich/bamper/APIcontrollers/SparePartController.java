@@ -6,6 +6,8 @@ import by.gurinovich.bamper.models.sparePartsEntities.SparePartName;
 import by.gurinovich.bamper.requests.SparePartCreatingRequest;
 import by.gurinovich.bamper.services.sparePart.SparePartNameService;
 import by.gurinovich.bamper.services.sparePart.SparePartService;
+import by.gurinovich.bamper.utils.mappers.impl.sparePart.SparePartMapper;
+import by.gurinovich.bamper.utils.mappers.impl.sparePart.SparePartNameMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
@@ -22,11 +24,13 @@ public class SparePartController {
 
     private final SparePartNameService sparePartNameService;
     private final SparePartService sparePartService;
+    private final SparePartNameMapper sparePartNameMapper;
+    private final SparePartMapper sparePartMapper;
 
     @Operation(summary = "Get all spare parts names")
     @GetMapping("/names/all")
     public ResponseEntity<Object> getAllSparePartsName(){
-        return new ResponseEntity<>(sparePartNameService.getAllSparePartsName().stream().map(SparePartNameService::convertToDTO).toList(), HttpStatus.OK);
+        return new ResponseEntity<>(sparePartNameMapper.toDTOs(sparePartNameService.getAllSparePartsName()), HttpStatus.OK);
     }
 
     @Operation(summary = "Get spare part name by id")
@@ -35,7 +39,7 @@ public class SparePartController {
         SparePartName sparePartName = sparePartNameService.getById(name_id);
         if (sparePartName == null)
             return new ResponseEntity<>("SparePartName with this id not found", HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(SparePartNameService.convertToDTO(sparePartName), HttpStatus.OK);
+        return new ResponseEntity<>(sparePartNameMapper.toDTO(sparePartName), HttpStatus.OK);
     }
 
     @Operation(summary = "Add spare part name")
@@ -58,7 +62,7 @@ public class SparePartController {
     @Operation(summary = "Get all spare parts")
     @GetMapping("/all")
     public ResponseEntity<Object> getAllSpareParts(){
-        return new ResponseEntity<>(sparePartService.findAll().stream().map(SparePartService::converToDTO).toList(), HttpStatus.OK);
+        return new ResponseEntity<>(sparePartMapper.toDTOs(sparePartService.findAll()), HttpStatus.OK);
     }
 
     @Operation(summary = "Get spare part by id")
@@ -67,7 +71,7 @@ public class SparePartController {
         SparePart sparePart = sparePartService.getById(sparePartId);
         if (sparePart == null)
             return new ResponseEntity<>("SparePart with this id or name not found", HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(SparePartService.converToDTO(sparePart), HttpStatus.OK);
+        return new ResponseEntity<>(sparePartMapper.toDTO(sparePart), HttpStatus.OK);
     }
 
     @Operation(summary = "Add new spare part")
@@ -76,7 +80,7 @@ public class SparePartController {
         SparePart newSparePart = sparePartService.save(sparePartCreatingRequest);
         if ( newSparePart == null)
             return new ResponseEntity<>("SparePartName with this id or name not found", HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(SparePartService.converToDTO(newSparePart),HttpStatus.CREATED);
+        return new ResponseEntity<>(sparePartMapper.toDTO(newSparePart),HttpStatus.CREATED);
     }
 
     @Operation(summary = "Delete spare part")
