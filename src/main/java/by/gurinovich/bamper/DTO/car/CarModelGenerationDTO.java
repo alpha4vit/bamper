@@ -2,6 +2,7 @@ package by.gurinovich.bamper.DTO.car;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Schema(description = "Car model generation DTO")
 public class CarModelGenerationDTO {
     @Schema(name = "Car model generation id", example = "1")

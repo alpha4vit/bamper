@@ -4,8 +4,7 @@ import by.gurinovich.bamper.utils.Views;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,6 +13,8 @@ import java.util.List;
 @Entity
 @Table(name = "car_brands")
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CarBrand{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

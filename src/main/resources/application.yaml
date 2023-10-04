@@ -21,9 +21,12 @@ spring:
     enabled: true
     default_schema: ${POSTGRES_SCHEMA}
   mail:
-    host: email-smtp.us-west-2.amazonaws.com
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
     username: ${MAIL_ADDRESS}
     password: ${MAIL_PASSWORD}
+    confirmLink: ${MAIL_CONFIRMATION_LINK}
+
     properties:
       mail:
         smtp:

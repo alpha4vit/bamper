@@ -45,10 +45,10 @@ public class CarBrandService {
 
     @Transactional
     public void deleteById(Integer id){
-        if (carBrandRepo.findById(id).isPresent())
-            carBrandRepo.deleteById(id);
-        else
+        if (carBrandRepo.findById(id).isEmpty())
             throw new ResourceNotFoundException("CarBrand with this id not found");
+        carBrandRepo.deleteById(id);
+
     }
 
 }

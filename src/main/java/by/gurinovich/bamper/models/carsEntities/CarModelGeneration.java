@@ -1,6 +1,8 @@
 package by.gurinovich.bamper.models.carsEntities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +14,8 @@ import java.util.Date;
 @Entity
 @Table(name = "car_model_generations")
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CarModelGeneration {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

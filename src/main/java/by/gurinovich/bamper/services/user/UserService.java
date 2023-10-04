@@ -71,6 +71,7 @@ public class UserService {
         if (userOptional.isEmpty())
             throw new ResourceNotFoundException("User with this id not found");
         User user = userOptional.get();
+        user.setEnabled(true);
         userRepo.save(user);
     }
 

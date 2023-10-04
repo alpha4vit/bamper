@@ -44,6 +44,4 @@ public class CarModelService {
         carModelRepo.save(new CarModel(carModelDTO.getName(), carBrand));
     }
 
-
-
 }

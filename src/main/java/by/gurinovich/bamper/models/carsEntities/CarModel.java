@@ -4,6 +4,8 @@ package by.gurinovich.bamper.models.carsEntities;
 import by.gurinovich.bamper.models.sparePartsEntities.SparePart;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +15,8 @@ import java.util.List;
 @Entity
 @Table(name = "car_models")
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CarModel  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
