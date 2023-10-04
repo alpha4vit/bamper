@@ -38,8 +38,6 @@ class CarBrandServiceTest {
 
     @Test
     void save() {
-        final CarBrand carBrand = new CarBrand();
-        carBrand.setName("BMW");
         Mockito.when(carBrandRepo.save(Mockito.any(CarBrand.class))).thenReturn(carBrand);
         final boolean result = carBrandService.save(new CarBrand());
         Assertions.assertTrue(result);

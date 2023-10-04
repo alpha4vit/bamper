@@ -2,6 +2,8 @@ package by.gurinovich.bamper.DTO.car;
 
 import by.gurinovich.bamper.DTO.spareParts.SparePartDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +12,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+@Builder
 @Schema(description = "Car model DTO")
 public class CarModelDTO {
     @Schema(name = "Car model id", example = "1")

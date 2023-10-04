@@ -1,6 +1,7 @@
 package by.gurinovich.bamper.services.car;
 
 import by.gurinovich.bamper.DTO.car.CarModelDTO;
+import by.gurinovich.bamper.exceptions.InvalidOperationException;
 import by.gurinovich.bamper.exceptions.ResourceNotFoundException;
 import by.gurinovich.bamper.models.carsEntities.CarBrand;
 import by.gurinovich.bamper.models.carsEntities.CarModel;
@@ -34,14 +35,17 @@ public class CarModelService {
     public void deleteById(Integer id){
         if (carModelRepo.findById(id).isPresent())
             carModelRepo.deleteById(id);
-
         else
             throw new ResourceNotFoundException("CarModel with this id not found");
     }
 
     @Transactional
-    public void save(CarBrand carBrand, CarModelDTO carModelDTO){
+    public boolean save(CarBrand carBrand, CarModelDTO carModelDTO){
+        List<CarModel> models = carModelRepo.findByCarBrand(carBrand);
+        if (models.stream().anyMatch(el -> el.getName().equals(carModelDTO.getName())))
+            throw new InvalidOperationException("CarModel for this brand already exists");
         carModelRepo.save(new CarModel(carModelDTO.getName(), carBrand));
+        return true;
     }
 
 }
