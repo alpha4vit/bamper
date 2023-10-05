@@ -1,11 +1,11 @@
-insert into bamper.users(username, password, email, date_of_registration, phone_number)
+insert into bamper.users(username, password, email, date_of_registration, phone_number, enabled)
 VALUES ('roma3',
         '$2a$12$NWOOOaosDf91qi53E/WxceZNxZ8V9BnpnDfMEZuoiL1hXVyyuRnfi',
         'roma3@gmail.com',
         date(now()),
-        '+375447517324'),
+        '+375447517324', true),
        ('roma4', '$2a$12$WI517GLLWbav.zFkrpgGheYbSfctLph8TLZAINfScsxRhoi5B5tg.',
-        'roma4@gmail.com', date(now()), '+375291234567');
+        'roma4@gmail.com', date(now()), '+375291234567', true);
 
 
 insert into bamper.car_brands(brand_name) values

@@ -6,7 +6,8 @@ create table if not exists users
     password varchar not null,
     email varchar not null unique,
     date_of_registration date,
-    phone_number varchar(25)
+    phone_number varchar(25),
+    enabled bool not null default false
 );
 
 create table if not exists spare_part_names

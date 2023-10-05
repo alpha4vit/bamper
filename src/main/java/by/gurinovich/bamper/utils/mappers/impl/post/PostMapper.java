@@ -2,6 +2,8 @@ package by.gurinovich.bamper.utils.mappers.impl.post;
 
 import by.gurinovich.bamper.DTO.post.PostDTO;
 import by.gurinovich.bamper.models.postsEntities.Post;
+import by.gurinovich.bamper.services.post.PostService;
+import by.gurinovich.bamper.services.user.UserService;
 import by.gurinovich.bamper.utils.mappers.Mappable;
 import by.gurinovich.bamper.utils.mappers.impl.user.UserMapper;
 import lombok.RequiredArgsConstructor;

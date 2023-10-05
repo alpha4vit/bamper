@@ -18,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/posts")
 @RequiredArgsConstructor
@@ -31,7 +33,8 @@ public class PostController {
     @Operation(summary = "Get all posts")
     @GetMapping("/all")
     public ResponseEntity<Object> getAllPosts(){
-        return new ResponseEntity<>(postMapper.toDTOs(postService.getAll()), HttpStatus.OK);
+        List<Post> posts = postService.getAll();
+        return new ResponseEntity<>(postMapper.toDTOs(posts), HttpStatus.OK);
     }
 
     @Operation(summary = "Get post by id")

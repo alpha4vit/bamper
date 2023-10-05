@@ -6,7 +6,9 @@ import by.gurinovich.bamper.models.postsEntities.Post;
 import by.gurinovich.bamper.models.user.Role;
 import by.gurinovich.bamper.models.user.User;
 import by.gurinovich.bamper.repositories.user.UserRepo;
+import by.gurinovich.bamper.security.JWTEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +25,10 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
 
-
+    public User getAuthorizedUser(){
+        JWTEntity jwtEntity = (JWTEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userRepo.findById(jwtEntity.getId()).orElseThrow(() -> new ResourceNotFoundException("User with this id not found"));
+    }
 
     public User getByUsername(String username){
         Optional<User> user = userRepo.findByUsername(username);

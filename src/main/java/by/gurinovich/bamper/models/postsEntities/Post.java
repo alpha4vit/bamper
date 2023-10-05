@@ -4,6 +4,8 @@ import by.gurinovich.bamper.models.user.User;
 import by.gurinovich.bamper.models.sparePartsEntities.SparePart;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +15,8 @@ import java.util.List;
 @Entity
 @Table(name = "posts")
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,11 +26,11 @@ public class Post {
     @NotBlank
     private String title;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "spare_part_id", referencedColumnName = "id")
     private SparePart sparePart;
 

@@ -32,10 +32,7 @@ public class PostService {
     }
 
     public Post getById(Integer id){
-        Optional<Post> post = postRepo.findById(id);
-        if (post.isEmpty())
-            throw new ResourceNotFoundException("Post with this id doesnt exist");
-        return post.get();
+        return postRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post with this id not found"));
     }
 
     public List<Post> getByUser(User user){
@@ -43,10 +40,8 @@ public class PostService {
     }
 
     public Post save(PostCreation postCreation) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        JWTEntity jwtEntity = (JWTEntity) authentication.getPrincipal();
         SparePart sparePart = sparePartService.getById(postCreation.getSparePartId());
-        Post post = new Post(postCreation.getTitle(), userService.getById(jwtEntity.getId()), sparePart);
+        Post post = new Post(postCreation.getTitle(), userService.getAuthorizedUser(), sparePart);
         return postRepo.save(post);
     }
 
@@ -56,6 +51,8 @@ public class PostService {
         String imageName = imageService.upload(image);
         List<String> images = post.getImages();
         images.add(imageName);
+        post.setImages(images);
+        postRepo.save(post);
     }
 
     @Transactional
