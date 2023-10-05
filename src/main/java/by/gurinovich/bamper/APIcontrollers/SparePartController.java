@@ -51,11 +51,8 @@ public class SparePartController {
 
     @Operation(summary = "Delete spare part name by id")
     @DeleteMapping("/names/delete/{spare_part_name_id}")
-    public ResponseEntity<Object> deleteSparePartName(@PathVariable("spare_part_name_id") Integer sparePartName_id){
-        SparePartName sparePartName = sparePartNameService.getById(sparePartName_id);
-        if (sparePartName == null)
-            return new ResponseEntity<>("SparePartName with this id not found", HttpStatus.NOT_FOUND);
-        sparePartNameService.delete(sparePartName);
+    public ResponseEntity<Object> deleteSparePartName(@PathVariable("spare_part_name_id") Integer sparePartNameId){
+        sparePartNameService.deleteById(sparePartNameId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -69,26 +66,20 @@ public class SparePartController {
     @GetMapping("/{spare_part_id}")
     public ResponseEntity<Object> getById(@PathVariable("spare_part_id") Integer sparePartId){
         SparePart sparePart = sparePartService.getById(sparePartId);
-        if (sparePart == null)
-            return new ResponseEntity<>("SparePart with this id or name not found", HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(sparePartMapper.toDTO(sparePart), HttpStatus.OK);
     }
 
     @Operation(summary = "Add new spare part")
     @PostMapping("/add")
     public ResponseEntity<Object> addNewSparePart(@RequestBody SparePartCreatingRequest sparePartCreatingRequest){
-        SparePart newSparePart = sparePartService.save(sparePartCreatingRequest);
-        if ( newSparePart == null)
-            return new ResponseEntity<>("SparePartName with this id or name not found", HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(sparePartMapper.toDTO(newSparePart),HttpStatus.CREATED);
+        return new ResponseEntity<>(sparePartMapper.toDTO(sparePartService.save(sparePartCreatingRequest)),HttpStatus.CREATED);
     }
 
     @Operation(summary = "Delete spare part")
     @DeleteMapping("/delete/{spare_part_id}")
-    public ResponseEntity<Object> deleteSparePart(@PathVariable("spare_part_id") Integer spare_part_id){
-        if (sparePartService.deleteById(spare_part_id))
-            return new ResponseEntity<>(HttpStatus.OK);
-        return new ResponseEntity<>("SparePart with this id not found", HttpStatus.NOT_FOUND);
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteSparePart(@PathVariable("spare_part_id") Integer sparePartId){
+        sparePartService.deleteById(sparePartId);
     }
 
 }

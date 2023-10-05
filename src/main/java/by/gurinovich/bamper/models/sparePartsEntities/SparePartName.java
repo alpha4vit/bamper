@@ -1,6 +1,8 @@
 package by.gurinovich.bamper.models.sparePartsEntities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +13,8 @@ import java.util.List;
 @Entity
 @Table(name = "spare_part_names")
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class SparePartName {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

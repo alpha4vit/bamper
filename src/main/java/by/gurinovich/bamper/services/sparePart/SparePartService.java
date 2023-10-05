@@ -1,6 +1,8 @@
 package by.gurinovich.bamper.services.sparePart;
 
 import by.gurinovich.bamper.DTO.spareParts.SparePartDTO;
+import by.gurinovich.bamper.exceptions.InvalidOperationException;
+import by.gurinovich.bamper.exceptions.ResourceNotFoundException;
 import by.gurinovich.bamper.models.sparePartsEntities.SparePart;
 import by.gurinovich.bamper.models.sparePartsEntities.SparePartName;
 import by.gurinovich.bamper.repositories.sparePart.SparePartNameRepo;
@@ -26,24 +28,24 @@ public class SparePartService {
     }
 
     public SparePart getById(Integer id){
-        return sparePartRepo.findById(id).orElse(null);
+        return sparePartRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("SparePart with this id or name not found"));
     }
 
     @Transactional
-    public boolean deleteById(Integer id){
-        if (sparePartRepo.findById(id).isPresent()) {
-            sparePartRepo.deleteById(id);
-            return true;
+    public void deleteById(Integer id){
+        if (sparePartRepo.findById(id).isEmpty()) {
+            throw new ResourceNotFoundException("SparePart with this id or name not found");
         }
-        return false;
+        sparePartRepo.deleteById(id);
     }
 
     @Transactional
     public SparePart save(SparePartCreatingRequest sparePartCreatingRequest){
         SparePartName sparePartName = sparePartCreatingRequest.getName_id() != null ?
-                sparePartNameRepo.findById(sparePartCreatingRequest.getName_id()).get() : sparePartNameRepo.findByName(sparePartCreatingRequest.getName()).get();
-
-        return sparePartName != null ? sparePartRepo.save(new SparePart(sparePartName, sparePartCreatingRequest.getNumber())) : null;
+                sparePartNameRepo.findById(sparePartCreatingRequest.getName_id()).get() : sparePartCreatingRequest.getName() != null ? sparePartNameRepo.findByName(sparePartCreatingRequest.getName()).get() : null;
+        if (sparePartName == null)
+            throw new InvalidOperationException("SparePartName with this id or name not found");
+        return sparePartRepo.save(new SparePart(sparePartName, sparePartCreatingRequest.getNumber()));
     }
 
 
