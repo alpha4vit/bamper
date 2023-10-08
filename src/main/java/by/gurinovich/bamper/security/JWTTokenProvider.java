@@ -37,7 +37,7 @@ public class JWTTokenProvider {
         this.key = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes());
     }
 
-    public String createAccessToken(final Integer userId, final String username, final Set<Role> roles){
+    public String createAccessToken(final Long userId, final String username, final Set<Role> roles){
 
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("id", userId);
@@ -52,7 +52,7 @@ public class JWTTokenProvider {
                 .compact();
     }
 
-    public String createRefreshToken(Integer userId, String username){
+    public String createRefreshToken(Long userId, String username){
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("id", userId);
         Date now = new Date();
@@ -70,7 +70,7 @@ public class JWTTokenProvider {
         if (!validateToken(refreshToken)){
             throw new AccessDeniedException("AccessDenied");
         }
-        Integer userId = Integer.valueOf(getId(refreshToken));
+        Long userId = Long.valueOf(getId(refreshToken));
         User user = userService.getById(userId);
         jwtResponse.setId(userId);
         jwtResponse.setUsername(user.getUsername());

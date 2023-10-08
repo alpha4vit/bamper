@@ -23,7 +23,7 @@ import java.util.Set;
 public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @NotBlank
     @Column(name = "username")
@@ -50,10 +50,16 @@ public class User{
     @JsonFormat(pattern = "yyyy-MM")
     private Calendar dateOfRegistration;
 
+    @OneToMany(mappedBy = "author")
+    private List<Review> reviewsBy;
+
+    @OneToMany(mappedBy = "user")
+    private List<Review> reviewsFor;
+
     @NotNull
     private boolean enabled;
 
-    public User(Integer id, String username, String password, String email, Set<Role> roles, String phoneNumber, Calendar dateOfRegistration, boolean enabled) {
+    public User(Long id, String username, String password, String email, Set<Role> roles, String phoneNumber, Calendar dateOfRegistration, boolean enabled) {
         this.id = id;
         this.username = username;
         this.password = password;

@@ -11,6 +11,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @Schema(description = "User DTO")
@@ -53,12 +55,12 @@ public class UserDTO {
     @JsonFormat(pattern = "yyyy-MM")
     private String dateOfRegistration;
 
-    public UserDTO(Integer id, String username, String password, String email, String phoneNumber, String dateOfRegistration) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.dateOfRegistration = dateOfRegistration;
-    }
+    @Schema(name = "Reviews created by this user")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private List<ReviewDTO> reviewsBy;
+
+    @Schema(name = "Reviews for this user")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private List<ReviewDTO> reviewsFor;
+
 }

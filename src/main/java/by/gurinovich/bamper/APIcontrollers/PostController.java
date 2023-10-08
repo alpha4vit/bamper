@@ -54,7 +54,7 @@ public class PostController {
 
     @Operation(summary = "Get all posts for user by user id")
     @GetMapping("/users/{user_id}")
-    public ResponseEntity<Object> getAllPostsForUser(@PathVariable("user_id") Integer userId){
+    public ResponseEntity<Object> getAllPostsForUser(@PathVariable("user_id") Long userId){
         User user = userService.getById(userId);
         return new ResponseEntity<>(postMapper.toDTOs(postService.getByUser(user)), HttpStatus.OK);
     }

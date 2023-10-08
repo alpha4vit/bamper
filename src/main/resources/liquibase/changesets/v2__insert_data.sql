@@ -24,3 +24,6 @@ insert into bamper.spare_part_names(name) values ('Карданный вал'), 
 insert into bamper.spare_parts(spare_part_name_id, number) VALUES (1, '42133513'), (2, '435133131312'), (3, '423245323');
 
 insert into bamper.posts(title, user_id, spare_part_id) VALUES ('ПОСТ1', 1, 1), ('ПОСТ2', 1, 2);
+
+insert into bamper.user_reviews(id, stars, title, text, user_id, author_id) values (1, 5, 'Отличный продавец',  'Все гуд', 1, 2),
+    (2, 3, 'Пойдет', 'Долгая доставка', 2, 1);

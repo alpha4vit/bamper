@@ -46,13 +46,13 @@ public class PostService {
     }
 
     @Transactional
-    public void uploadImage(Integer id, Image image) {
+    public Post uploadImage(Integer id, Image image) {
         Post post = getById(id);
         String imageName = imageService.upload(image);
         List<String> images = post.getImages();
         images.add(imageName);
         post.setImages(images);
-        postRepo.save(post);
+        return postRepo.save(post);
     }
 
     @Transactional

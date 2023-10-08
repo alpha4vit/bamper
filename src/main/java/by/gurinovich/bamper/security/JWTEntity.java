@@ -12,7 +12,7 @@ import java.util.Collection;
 @AllArgsConstructor
 public class JWTEntity implements UserDetails {
 
-    private Integer id;
+    private Long id;
     private final String username;
     private final String email;
     private final String password;

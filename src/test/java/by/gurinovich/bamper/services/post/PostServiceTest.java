@@ -1,6 +1,7 @@
 package by.gurinovich.bamper.services.post;
 
 import by.gurinovich.bamper.exceptions.ResourceNotFoundException;
+import by.gurinovich.bamper.models.postsEntities.Image;
 import by.gurinovich.bamper.models.postsEntities.Post;
 import by.gurinovich.bamper.models.sparePartsEntities.SparePart;
 import by.gurinovich.bamper.models.sparePartsEntities.SparePartName;
@@ -17,7 +18,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
 
+import javax.swing.text.html.Option;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +41,7 @@ class PostServiceTest {
     private Post post;
     private User user;
     private PostCreation postCreation;
+    private Image image;
 
     @BeforeEach
     void setUp(){
@@ -53,9 +58,10 @@ class PostServiceTest {
                 .id(1)
                 .title("Title")
                 .sparePart(sparePart)
+                .images(new ArrayList<>())
                 .build();
         user = User.builder()
-                .id(1)
+                .id(Long.valueOf(1))
                 .username("roma")
                 .email("roma@gmail.com")
                 .phoneNumber("+375441234567")
@@ -65,6 +71,7 @@ class PostServiceTest {
                 .sparePartId(1)
                 .title("Title")
                 .build();
+        image = new Image(new MockMultipartFile("123", new byte[]{12}));
     }
 
     @Test
@@ -109,13 +116,14 @@ class PostServiceTest {
 
     @Test
     void uploadImage() {
+        String imageName = "image name";
+        Mockito.when(postRepo.findById(Mockito.anyInt())).thenReturn(Optional.of(post));
+        Mockito.when(imageService.upload(Mockito.any(Image.class))).thenReturn(imageName);
+        postService.uploadImage(Mockito.anyInt(), image);
+        Mockito.verify(postRepo).findById(Mockito.anyInt());
+        Mockito.verify(imageService).upload(Mockito.any(Image.class));
+        Mockito.verify(postRepo).save(Mockito.any(Post.class));
+        //TODO not finished
     }
 
-    @Test
-    void deleteImage() {
-    }
-
-    @Test
-    void deleteById() {
-    }
 }

@@ -45,7 +45,7 @@ public class AuthController {
     }
 
     @GetMapping("/confirm/{user_id}")
-    public void confirm(@PathVariable("user_id") Integer userId){
+    public void confirm(@PathVariable("user_id") Long userId){
         userService.enableUser(userId);
     }
 }

@@ -25,9 +25,13 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
 
+    public List<User> getAll(){
+        return userRepo.findAll();
+    }
+
     public User getAuthorizedUser(){
         JWTEntity jwtEntity = (JWTEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userRepo.findById(jwtEntity.getId()).orElseThrow(() -> new ResourceNotFoundException("User with this id not found"));
+        return userRepo.findById(jwtEntity.getId()).orElseThrow(() -> new ResourceNotFoundException("Not authorized!"));
     }
 
     public User getByUsername(String username){
@@ -35,12 +39,12 @@ public class UserService {
         return user.orElseThrow(() -> new ResourceNotFoundException("User with this username not found"));
     }
 
-    public User getById(Integer id){
+    public User getById(Long id){
         Optional<User> user = userRepo.findById(id);
         return user.orElseThrow(() -> new ResourceNotFoundException("User with this id not found"));
     }
 
-    public boolean isPostOwner(Integer id, Integer post_id){
+    public boolean isPostOwner(Long id, Long post_id){
         return getById(id).getPosts().stream().anyMatch(el -> el.getId() == post_id);
     }
 
@@ -66,12 +70,12 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteById(Integer id){
+    public void deleteById(Long id){
         userRepo.deleteById(id);
     }
 
     @Transactional
-    public void enableUser(Integer id){
+    public void enableUser(Long id){
         Optional<User> userOptional = userRepo.findById(id);
         if (userOptional.isEmpty())
             throw new ResourceNotFoundException("User with this id not found");
