@@ -61,7 +61,7 @@ class PostServiceTest {
                 .images(new ArrayList<>())
                 .build();
         user = User.builder()
-                .id(Long.valueOf(1))
+                .id(1L)
                 .username("roma")
                 .email("roma@gmail.com")
                 .phoneNumber("+375441234567")

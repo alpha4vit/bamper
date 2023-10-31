@@ -12,7 +12,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -69,6 +68,4 @@ public class UserController {
         Review created = reviewService.save(userId, reviewDTO);
         return new ResponseEntity<>(reviewMapper.toDTO(created), HttpStatus.CREATED);
     }
-
-
 }

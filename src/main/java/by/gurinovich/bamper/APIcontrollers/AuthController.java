@@ -4,6 +4,7 @@ import by.gurinovich.bamper.DTO.user.UserDTO;
 import by.gurinovich.bamper.models.user.User;
 import by.gurinovich.bamper.requests.auth.JWTRequest;
 import by.gurinovich.bamper.responses.auth.JWTResponse;
+import by.gurinovich.bamper.services.user.AddressService;
 import by.gurinovich.bamper.services.user.AuthService;
 import by.gurinovich.bamper.services.user.UserService;
 import by.gurinovich.bamper.utils.mappers.impl.user.UserMapper;
@@ -25,9 +26,13 @@ public class AuthController {
     private final AuthService authService;
     private final UserService userService;
     private final UserMapper userMapper;
+    private final AddressService addressService;
 
     @PostMapping("/login")
     public JWTResponse login(@Validated @RequestBody JWTRequest loginRequest){
+        String coordinates = addressService.getCoordinatesByAddress("проспект Независимости, 62, Минск");
+        System.out.println(coordinates);
+        System.out.println(addressService.getAddressByCoordinates(coordinates));
         return authService.login(loginRequest);
     }
 

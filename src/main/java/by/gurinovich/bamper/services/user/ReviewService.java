@@ -6,7 +6,6 @@ import by.gurinovich.bamper.exceptions.ResourceNotFoundException;
 import by.gurinovich.bamper.models.user.Review;
 import by.gurinovich.bamper.models.user.User;
 import by.gurinovich.bamper.repositories.user.ReviewRepo;
-import by.gurinovich.bamper.repositories.user.UserRepo;
 import by.gurinovich.bamper.utils.mappers.impl.user.ReviewMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

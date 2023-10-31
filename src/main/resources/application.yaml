@@ -11,7 +11,7 @@ spring:
       password: ${REDIS_PASSWORD}
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${HOST}:5432/${POSTGRES_DATABASE}?currentSchema=${POSTGRES_SCHEMA}
+    url: jdbc:postgresql://localhost:5432/${POSTGRES_DATABASE}?currentSchema=${POSTGRES_SCHEMA}
     username: ${POSTGRES_USERNAME}
     password: ${POSTGRES_PASSWORD}
   jpa:
@@ -26,7 +26,6 @@ spring:
     username: ${MAIL_ADDRESS}
     password: ${MAIL_PASSWORD}
     confirmLink: ${MAIL_CONFIRMATION_LINK}
-
     properties:
       mail:
         smtp:
@@ -45,3 +44,8 @@ minio:
   secretKey: ${MINIO_SECRET_KEY}
 springdoc:
   override-with-generic-response: false
+yandex:
+  geocoder:
+    key: ${GEOCODER_API_KEY}
+    url: https://geocode-maps.yandex.ru/1.x/?apikey=${GEOCODER_API_KEY}&geocode=
+    format: format=json

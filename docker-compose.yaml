@@ -13,12 +13,12 @@ services:
     build:
       context: .
     container_name: bamper
-    depends_on:
-      - db
-      - minio
-      - redis
     env_file:
       - .env
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${POSTGRES_DATABASE}?currentSchema=${POSTGRES_SCHEMA}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - '8080:8080'
   db:
@@ -28,6 +28,8 @@ services:
       - POSTGRES_USER=${POSTGRES_USERNAME}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DATABASE}
+    ports:
+      - '5432:5432'
   redis:
     image: redis:7.2-rc-alpine
     container_name: redis
