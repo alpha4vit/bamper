@@ -56,9 +56,6 @@ public class User{
     @OneToMany(mappedBy = "user")
     private List<Review> reviewsFor;
 
-    @OneToMany(mappedBy = "user")
-    private List<Address> addresses;
-
     @NotNull
     private boolean enabled;
 

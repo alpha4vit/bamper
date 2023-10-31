@@ -26,13 +26,9 @@ public class AuthController {
     private final AuthService authService;
     private final UserService userService;
     private final UserMapper userMapper;
-    private final AddressService addressService;
 
     @PostMapping("/login")
     public JWTResponse login(@Validated @RequestBody JWTRequest loginRequest){
-        String coordinates = addressService.getCoordinatesByAddress("проспект Независимости, 62, Минск");
-        System.out.println(coordinates);
-        System.out.println(addressService.getAddressByCoordinates(coordinates));
         return authService.login(loginRequest);
     }
 

@@ -1,5 +1,6 @@
 package by.gurinovich.bamper.models.postsEntities;
 
+import by.gurinovich.bamper.models.user.Address;
 import by.gurinovich.bamper.models.user.User;
 import by.gurinovich.bamper.models.sparePartsEntities.SparePart;
 import jakarta.persistence.*;
@@ -20,7 +21,7 @@ import java.util.List;
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(name = "title")
     @NotBlank
@@ -39,6 +40,8 @@ public class Post {
     @ElementCollection
     private List<String> images;
 
+    @OneToMany(mappedBy = "post")
+    private List<Address> addresses;
 
     public Post(String title, User user, SparePart sparePart) {
         this.title = title;

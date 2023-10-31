@@ -7,6 +7,7 @@ import by.gurinovich.bamper.models.user.User;
 import by.gurinovich.bamper.requests.PostCreation;
 import by.gurinovich.bamper.services.post.PostService;
 import by.gurinovich.bamper.services.user.UserService;
+import by.gurinovich.bamper.utils.mappers.impl.post.AddressMapper;
 import by.gurinovich.bamper.utils.mappers.impl.post.ImageMapper;
 import by.gurinovich.bamper.utils.mappers.impl.post.PostMapper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,6 +30,7 @@ public class PostController {
     private final UserService userService;
     private final PostMapper postMapper;
     private final ImageMapper imageMapper;
+    private final AddressMapper addressMapper;
 
     @Operation(summary = "Get all posts")
     @GetMapping("/all")
@@ -39,7 +41,7 @@ public class PostController {
 
     @Operation(summary = "Get post by id")
     @GetMapping("/{post_id}")
-    public ResponseEntity<Object> getPostById(@PathVariable("post_id") Integer postId){
+    public ResponseEntity<Object> getPostById(@PathVariable("post_id") Long postId){
         return new ResponseEntity<>(postMapper.toDTO(postService.getById(postId)), HttpStatus.OK);
     }
 
@@ -47,7 +49,7 @@ public class PostController {
     @DeleteMapping("/{post_id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("@customSecurityExpression.isPostOwner(#postId)")
-    public void deletePostId(@PathVariable("post_id") Integer postId){
+    public void deletePostId(@PathVariable("post_id") Long postId){
         postService.deleteById(postId);
     }
 
@@ -68,14 +70,14 @@ public class PostController {
 
     @Operation(summary = "Get all images for post by post id")
     @GetMapping("/{post_id}/images")
-    public ResponseEntity<Object> getAllImagesForPost(@PathVariable("post_id") Integer postId){
+    public ResponseEntity<Object> getAllImagesForPost(@PathVariable("post_id") Long postId){
         return new ResponseEntity<>(postService.getById(postId).getImages(), HttpStatus.OK);
     }
 
     @Operation(summary = "Add image for post by post id")
     @PostMapping( "/{post_id}/images/add")
     @PreAuthorize("@customSecurityExpression.isPostOwner(#postId)")
-    public ResponseEntity<Object> uploadImageForPost(@PathVariable("post_id") Integer postId, @ModelAttribute ImageDTO imageDTO){
+    public ResponseEntity<Object> uploadImageForPost(@PathVariable("post_id") Long postId, @ModelAttribute ImageDTO imageDTO){
         Image image = imageMapper.fromDTO(imageDTO);
         postService.uploadImage(postId, image);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -85,11 +87,17 @@ public class PostController {
     @DeleteMapping("/{post_id}/images/delete")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("@customSecurityExpression.isPostOwner(#postId)")
-    public void deleteImage(@PathVariable("post_id") Integer postId,
+    public void deleteImage(@PathVariable("post_id") Long postId,
                             @RequestBody String jsonRequest){
         JSONObject jsonObject = new JSONObject(jsonRequest);
         String name = jsonObject.getString("name");
         postService.deleteImage(postId, name);
+    }
+
+    @Operation(summary = "Get addresses of post")
+    @GetMapping("/{post_id}/address")
+    public ResponseEntity<Object> getAddressesForPost(@PathVariable("post_id") Long id){
+        return new ResponseEntity<>(addressMapper.toDTOs(postService.getById(id).getAddresses()), HttpStatus.OK);
     }
 
 

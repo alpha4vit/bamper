@@ -1,5 +1,6 @@
 package by.gurinovich.bamper.DTO.post;
 
+import by.gurinovich.bamper.DTO.user.AddressDTO;
 import by.gurinovich.bamper.DTO.user.UserDTO;
 import by.gurinovich.bamper.DTO.spareParts.SparePartDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,19 +16,22 @@ import java.util.List;
 @NoArgsConstructor
 @Schema(description = "Post DTO")
 public class PostDTO {
-    @Schema(name = "Post id", example = "1")
+    @Schema(name = "id", example = "1")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer id;
-    @Schema(name = "Post title", example = "Продам колесо R18")
+    @Schema(name = "title", example = "Продам колесо R18")
     private String title;
 
-    @Schema(name = "User DTO")
+    @Schema(name = "user")
     private UserDTO user;
 
-    @Schema(name = "Spare part DTO")
+    @Schema(name = "spare_part")
     private SparePartDTO sparePart;
 
-    @Schema(name = "Images", example = "{sdadsanjn231n31.png, iujkemqwkekmd321fdsa12.png}")
+    @Schema(name = "images", example = "{sdadsanjn231n31.png, iujkemqwkekmd321fdsa12.png}")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<String> images;
+
+    @Schema(name = "addresses")
+    private List<AddressDTO> addresses;
 }
