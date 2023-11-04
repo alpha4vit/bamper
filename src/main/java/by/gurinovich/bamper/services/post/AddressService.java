@@ -1,4 +1,4 @@
-package by.gurinovich.bamper.services.user;
+package by.gurinovich.bamper.services.post;
 
 import by.gurinovich.bamper.exceptions.ResourceNotFoundException;
 import by.gurinovich.bamper.models.postsEntities.Post;
@@ -21,6 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,6 +32,17 @@ public class AddressService {
     private final AddressRepo addressRepo;
     private final GeocoderProperties geocoderProperties;
     private final RestTemplate restTemplate;
+
+    @Transactional
+    public void deleteAllByPost(Post post){
+        addressRepo.deleteAllByPost(post);
+    }
+
+    @Transactional
+    public void deleteById(Long id){
+        getById(id);
+        addressRepo.deleteById(id);
+    }
 
     @Transactional
     public Address save(Post post, String request){
@@ -44,6 +56,10 @@ public class AddressService {
                 .post(post)
                 .build();
         return addressRepo.save(address);
+    }
+
+    public List<Address> getAllByPost(Post post){
+        return addressRepo.findByPost(post);
     }
 
     public Address getById(Long id){

@@ -4,7 +4,6 @@ import by.gurinovich.bamper.DTO.user.UserDTO;
 import by.gurinovich.bamper.models.user.User;
 import by.gurinovich.bamper.requests.auth.JWTRequest;
 import by.gurinovich.bamper.responses.auth.JWTResponse;
-import by.gurinovich.bamper.services.user.AddressService;
 import by.gurinovich.bamper.services.user.AuthService;
 import by.gurinovich.bamper.services.user.UserService;
 import by.gurinovich.bamper.utils.mappers.impl.user.UserMapper;
@@ -15,7 +14,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.util.Arrays;
 
 @RestController
 @RequestMapping("/api/auth")

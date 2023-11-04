@@ -7,18 +7,13 @@ import by.gurinovich.bamper.models.sparePartsEntities.SparePart;
 import by.gurinovich.bamper.models.user.User;
 import by.gurinovich.bamper.repositories.posts.PostRepo;
 import by.gurinovich.bamper.requests.PostCreation;
-import by.gurinovich.bamper.security.JWTEntity;
 import by.gurinovich.bamper.services.sparePart.SparePartService;
-import by.gurinovich.bamper.services.user.AddressService;
 import by.gurinovich.bamper.services.user.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
