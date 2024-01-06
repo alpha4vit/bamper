@@ -64,7 +64,7 @@ public class SparePartController {
 
     @Operation(summary = "Get spare part by id")
     @GetMapping("/{spare_part_id}")
-    public ResponseEntity<Object> getById(@PathVariable("spare_part_id") Integer sparePartId){
+    public ResponseEntity<Object> getById(@PathVariable("spare_part_id") Long sparePartId){
         SparePart sparePart = sparePartService.getById(sparePartId);
         return new ResponseEntity<>(sparePartMapper.toDTO(sparePart), HttpStatus.OK);
     }
@@ -78,7 +78,7 @@ public class SparePartController {
     @Operation(summary = "Delete spare part")
     @DeleteMapping("/delete/{spare_part_id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteSparePart(@PathVariable("spare_part_id") Integer sparePartId){
+    public void deleteSparePart(@PathVariable("spare_part_id") Long sparePartId){
         sparePartService.deleteById(sparePartId);
     }
 

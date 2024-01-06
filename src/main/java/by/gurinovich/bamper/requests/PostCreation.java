@@ -15,7 +15,7 @@ public class PostCreation {
 
     @Schema(name = "spare_part_id", example = "1")
     @JsonProperty(value = "spare_part_id")
-    private Integer sparePartId;
+    private Long sparePartId;
 
     @Schema(name = "address", example = "проспект Пушкина 30, Минск")
     private String address;

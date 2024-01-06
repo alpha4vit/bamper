@@ -6,11 +6,9 @@ import by.gurinovich.bamper.exceptions.ResourceNotFoundException;
 import by.gurinovich.bamper.models.carsEntities.CarBrand;
 import by.gurinovich.bamper.models.carsEntities.CarModel;
 import by.gurinovich.bamper.models.carsEntities.CarModelGeneration;
-import by.gurinovich.bamper.repositories.car.CarModelGenerationRepo;
+import by.gurinovich.bamper.repositories.car.CarModelGenerationRepository;
 import by.gurinovich.bamper.utils.mappers.impl.car.CarModelGenerationMapper;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,17 +18,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.*;
 
 @ExtendWith(MockitoExtension.class)
 class CarModelGenerationServiceTest {
     @Mock
-    private CarModelGenerationRepo carModelGenerationRepo;
+    private CarModelGenerationRepository carModelGenerationRepository;
 
     @InjectMocks
     private CarModelGenerationService carModelGenerationService;
@@ -64,60 +57,60 @@ class CarModelGenerationServiceTest {
     @Test
     @SneakyThrows
     void save() {
-        Mockito.when(carModelGenerationRepo.findAllByCarModel(carModel)).thenReturn(new ArrayList<>());
-        Mockito.when(carModelGenerationRepo.save(Mockito.any(CarModelGeneration.class))).thenReturn(carModelGeneration);
+        Mockito.when(carModelGenerationRepository.findAllByCarModel(carModel)).thenReturn(new ArrayList<>());
+        Mockito.when(carModelGenerationRepository.save(Mockito.any(CarModelGeneration.class))).thenReturn(carModelGeneration);
         Assertions.assertEquals(carModelGeneration, carModelGenerationService.save(carModel, carModelGenerationDTO));
-        Mockito.verify(carModelGenerationRepo).findAllByCarModel(Mockito.any(CarModel.class));
-        Mockito.verify(carModelGenerationRepo).save(Mockito.any(CarModelGeneration.class));
+        Mockito.verify(carModelGenerationRepository).findAllByCarModel(Mockito.any(CarModel.class));
+        Mockito.verify(carModelGenerationRepository).save(Mockito.any(CarModelGeneration.class));
     }
 
     @SneakyThrows
     @Test
     void throwExceptionWhenTryigToSaveGenerationWithExistingNameForOneBrand() {
-        Mockito.when(carModelGenerationRepo.findAllByCarModel(carModel)).thenReturn(List.of(carModelGeneration));
+        Mockito.when(carModelGenerationRepository.findAllByCarModel(carModel)).thenReturn(List.of(carModelGeneration));
         Assertions.assertThrows(InvalidOperationException.class, () -> carModelGenerationService.save(carModel, carModelGenerationDTO));
-        Mockito.verify(carModelGenerationRepo).findAllByCarModel(Mockito.any(CarModel.class));
-        Mockito.verify(carModelGenerationRepo, Mockito.times(0)).save(Mockito.any(CarModelGeneration.class));
+        Mockito.verify(carModelGenerationRepository).findAllByCarModel(Mockito.any(CarModel.class));
+        Mockito.verify(carModelGenerationRepository, Mockito.times(0)).save(Mockito.any(CarModelGeneration.class));
     }
 
     @Test
     void shouldReturnExistingCarModelGenerationById(){
-        Mockito.when(carModelGenerationRepo.findById(Mockito.anyInt())).thenReturn(Optional.of(carModelGeneration));
+        Mockito.when(carModelGenerationRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(carModelGeneration));
         Assertions.assertEquals(carModelGeneration, carModelGenerationService.getById(Mockito.anyInt()));
-        Mockito.verify(carModelGenerationRepo).findById(Mockito.anyInt());
+        Mockito.verify(carModelGenerationRepository).findById(Mockito.anyInt());
     }
 
 
     @Test
     void throwExceptionWhenTryingToGetcarModelGenerationByNotExistingId(){
-        Mockito.when(carModelGenerationRepo.findById(Mockito.anyInt())).thenReturn(Optional.empty());
+        Mockito.when(carModelGenerationRepository.findById(Mockito.anyInt())).thenReturn(Optional.empty());
         Assertions.assertThrows(ResourceNotFoundException.class, () -> carModelGenerationService.getById(Mockito.anyInt()));
-        Mockito.verify(carModelGenerationRepo).findById(Mockito.anyInt());
+        Mockito.verify(carModelGenerationRepository).findById(Mockito.anyInt());
     }
 
 
     @Test
     void shouldDeleteById(){
-        Mockito.doNothing().when(carModelGenerationRepo).deleteById(Mockito.anyInt());
-        Mockito.when(carModelGenerationRepo.findById(Mockito.anyInt())).thenReturn(Optional.of(carModelGeneration));
+        Mockito.doNothing().when(carModelGenerationRepository).deleteById(Mockito.anyInt());
+        Mockito.when(carModelGenerationRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(carModelGeneration));
         carModelGenerationService.deleteById(Mockito.anyInt());
-        Mockito.verify(carModelGenerationRepo).findById(Mockito.anyInt());
-        Mockito.verify(carModelGenerationRepo).deleteById(Mockito.anyInt());
+        Mockito.verify(carModelGenerationRepository).findById(Mockito.anyInt());
+        Mockito.verify(carModelGenerationRepository).deleteById(Mockito.anyInt());
     }
 
     @Test
     void shouldThrowExceptionWhenTryingToDeleteCarModelGenerationWithNotExistingId(){
-        Mockito.when(carModelGenerationRepo.findById(Mockito.anyInt())).thenReturn(Optional.empty());
+        Mockito.when(carModelGenerationRepository.findById(Mockito.anyInt())).thenReturn(Optional.empty());
         Assertions.assertThrows(ResourceNotFoundException.class, () -> carModelGenerationService.deleteById(Mockito.anyInt()));
-        Mockito.verify(carModelGenerationRepo).findById(Mockito.anyInt());
-        Mockito.verify(carModelGenerationRepo, Mockito.times(0)).deleteById(Mockito.anyInt());
+        Mockito.verify(carModelGenerationRepository).findById(Mockito.anyInt());
+        Mockito.verify(carModelGenerationRepository, Mockito.times(0)).deleteById(Mockito.anyInt());
     }
 
 
     @Test
     void getAllGenerationsForModel() {
-        Mockito.when(carModelGenerationRepo.findAllByCarModel(Mockito.any(CarModel.class))).thenReturn(List.of(carModelGeneration, new CarModelGeneration()));
-        org.assertj.core.api.Assertions.assertThat(carModelGenerationRepo.findAllByCarModel(carModel)).hasSize(2);
-        Mockito.verify(carModelGenerationRepo).findAllByCarModel(Mockito.any(CarModel.class));
+        Mockito.when(carModelGenerationRepository.findAllByCarModel(Mockito.any(CarModel.class))).thenReturn(List.of(carModelGeneration, new CarModelGeneration()));
+        org.assertj.core.api.Assertions.assertThat(carModelGenerationRepository.findAllByCarModel(carModel)).hasSize(2);
+        Mockito.verify(carModelGenerationRepository).findAllByCarModel(Mockito.any(CarModel.class));
     }
 }

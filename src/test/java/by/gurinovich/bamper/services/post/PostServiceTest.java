@@ -6,7 +6,7 @@ import by.gurinovich.bamper.models.postsEntities.Post;
 import by.gurinovich.bamper.models.sparePartsEntities.SparePart;
 import by.gurinovich.bamper.models.sparePartsEntities.SparePartName;
 import by.gurinovich.bamper.models.user.User;
-import by.gurinovich.bamper.repositories.posts.PostRepo;
+import by.gurinovich.bamper.repositories.posts.PostRepository;
 import by.gurinovich.bamper.requests.PostCreation;
 import by.gurinovich.bamper.services.sparePart.SparePartService;
 import by.gurinovich.bamper.services.user.UserService;
@@ -20,7 +20,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +27,7 @@ import java.util.Optional;
 @ExtendWith(MockitoExtension.class)
 class PostServiceTest {
 
-    @Mock private PostRepo postRepo;
+    @Mock private PostRepository postRepository;
     @Mock private UserService userService;
     @Mock private ImageService imageService;
     @Mock private SparePartService sparePartService;
@@ -50,12 +49,12 @@ class PostServiceTest {
                 .name("Engine")
                 .build();
         sparePart = SparePart.builder()
-                .id(1)
+                .id(1L)
                 .name(sparePartName)
                 .number("123245")
                 .build();
         post = Post.builder()
-                .id(1)
+                .id(1L)
                 .title("Title")
                 .sparePart(sparePart)
                 .images(new ArrayList<>())
@@ -68,7 +67,7 @@ class PostServiceTest {
                 .enabled(true)
                 .build();
         postCreation = PostCreation.builder()
-                .sparePartId(1)
+                .sparePartId(1L)
                 .title("Title")
                 .build();
         image = new Image(new MockMultipartFile("123", new byte[]{12}));
@@ -76,53 +75,53 @@ class PostServiceTest {
 
     @Test
     void getAll() {
-        Mockito.when(postRepo.findAll()).thenReturn(List.of(post, new Post()));
+        Mockito.when(postRepository.findAll()).thenReturn(List.of(post, new Post()));
         org.assertj.core.api.Assertions.assertThat(postService.getAll()).hasSize(2);
-        Mockito.verify(postRepo).findAll();
+        Mockito.verify(postRepository).findAll();
     }
 
     @Test
     void shouldReturnExistingCarBrandById(){
-        Mockito.when(postRepo.findById(Mockito.anyInt())).thenReturn(Optional.of(post));
-        Assertions.assertEquals(post, postService.getById(Mockito.anyInt()));
-        Mockito.verify(postRepo).findById(Mockito.anyInt());
+        Mockito.when(postRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(post));
+        Assertions.assertEquals(post, postService.getById(Mockito.anyLong()));
+        Mockito.verify(postRepository).findById(Mockito.anyLong());
     }
 
 
     @Test
     void throwExceptionWhenTryingToGetCarBrandByNotExistingId(){
-        Mockito.when(postRepo.findById(Mockito.anyInt())).thenReturn(Optional.empty());
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> postService.getById(Mockito.anyInt()));
-        Mockito.verify(postRepo).findById(Mockito.anyInt());
+        Mockito.when(postRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> postService.getById(Mockito.anyLong()));
+        Mockito.verify(postRepository).findById(Mockito.anyLong());
     }
 
     @Test
     void getByUser() {
-        Mockito.when(postRepo.findByUser(Mockito.any(User.class))).thenReturn(List.of(post, new Post()));
+        Mockito.when(postRepository.findByUser(Mockito.any(User.class))).thenReturn(List.of(post, new Post()));
         org.assertj.core.api.Assertions.assertThat(postService.getByUser(user)).hasSize(2);
-        Mockito.verify(postRepo).findByUser(Mockito.any(User.class));
+        Mockito.verify(postRepository).findByUser(Mockito.any(User.class));
     }
 
     @Test
     void save() {
-        Mockito.when(sparePartService.getById(Mockito.anyInt())).thenReturn(sparePart);
+        Mockito.when(sparePartService.getById(Mockito.anyLong())).thenReturn(sparePart);
         Mockito.when(userService.getAuthorizedUser()).thenReturn(user);
-        Mockito.when(postRepo.save(Mockito.any(Post.class))).thenReturn(post);
+        Mockito.when(postRepository.save(Mockito.any(Post.class))).thenReturn(post);
         Assertions.assertEquals(post, postService.save(postCreation));
-        Mockito.verify(sparePartService).getById(Mockito.anyInt());
+        Mockito.verify(sparePartService).getById(Mockito.anyLong());
         Mockito.verify(userService).getAuthorizedUser();
-        Mockito.verify(postRepo).save(Mockito.any(Post.class));
+        Mockito.verify(postRepository).save(Mockito.any(Post.class));
     }
 
     @Test
     void uploadImage() {
         String imageName = "image name";
-        Mockito.when(postRepo.findById(Mockito.anyInt())).thenReturn(Optional.of(post));
+        Mockito.when(postRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(post));
         Mockito.when(imageService.upload(Mockito.any(Image.class))).thenReturn(imageName);
-        postService.uploadImage(Mockito.anyInt(), image);
-        Mockito.verify(postRepo).findById(Mockito.anyInt());
+        postService.uploadImage(Mockito.anyLong(), image);
+        Mockito.verify(postRepository).findById(Mockito.anyLong());
         Mockito.verify(imageService).upload(Mockito.any(Image.class));
-        Mockito.verify(postRepo).save(Mockito.any(Post.class));
+        Mockito.verify(postRepository).save(Mockito.any(Post.class));
         //TODO not finished
     }
 

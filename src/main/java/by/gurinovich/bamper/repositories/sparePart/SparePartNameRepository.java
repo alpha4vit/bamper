@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface SparePartNameRepo extends JpaRepository<SparePartName, Integer> { Optional<SparePartName> findByName(String name);
+public interface SparePartNameRepository extends JpaRepository<SparePartName, Integer> { Optional<SparePartName> findByName(String name);
 }

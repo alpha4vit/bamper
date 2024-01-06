@@ -4,23 +4,14 @@ import by.gurinovich.bamper.exceptions.ResourceNotFoundException;
 import by.gurinovich.bamper.models.postsEntities.Post;
 import by.gurinovich.bamper.models.user.Address;
 import by.gurinovich.bamper.props.GeocoderProperties;
-import by.gurinovich.bamper.repositories.user.AddressRepo;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import by.gurinovich.bamper.repositories.user.AddressRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,25 +20,25 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AddressService {
 
-    private final AddressRepo addressRepo;
+    private final AddressRepository addressRepository;
     private final GeocoderProperties geocoderProperties;
     private final RestTemplate restTemplate;
 
     @Transactional
     public void deleteAllByPost(Post post){
-        addressRepo.deleteAllByPost(post);
+        addressRepository.deleteAllByPost(post);
     }
 
     @Transactional
     public void deleteById(Long id){
         getById(id);
-        addressRepo.deleteById(id);
+        addressRepository.deleteById(id);
     }
 
     @Transactional
     public Address save(Post post, String request){
         String coordinates = getCoordinatesByAddress(request);
-        Optional<Address> check = addressRepo.findByCoordinates(coordinates);
+        Optional<Address> check = addressRepository.findByCoordinates(coordinates);
         if (check.isPresent())
             return check.get();
         Address address = Address.builder()
@@ -55,15 +46,15 @@ public class AddressService {
                 .address(getAddressByCoordinates(coordinates))
                 .post(post)
                 .build();
-        return addressRepo.save(address);
+        return addressRepository.save(address);
     }
 
     public List<Address> getAllByPost(Post post){
-        return addressRepo.findByPost(post);
+        return addressRepository.findByPost(post);
     }
 
     public Address getById(Long id){
-        return addressRepo.findById(id).orElseThrow(
+        return addressRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Address with this not found!"));
     }
 

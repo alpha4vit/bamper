@@ -4,13 +4,11 @@ import java.text.ParseException;
 import java.util.List;
 
 public interface Mappable<E, D> {
+     E fromDTO(D dto) throws ParseException;
 
-    public E fromDTO(D dto) throws ParseException;
+     D toDTO(E entity);
 
-    public D toDTO(E entity);
+     List<D> toDTOs(List<E> entities);
 
-    public List<D> toDTOs(List<E> entities);
-
-    public List<E> toEntities(List<D> dtos) throws Exception;
-
+     List<E> toEntities(List<D> dtos) throws Exception;
 }

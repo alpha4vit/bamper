@@ -20,7 +20,7 @@ import java.util.List;
 public class SparePart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "spare_part_name_id", referencedColumnName = "id")
